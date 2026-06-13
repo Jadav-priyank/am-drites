@@ -72,7 +72,7 @@ export default function Products({
         </p>
 
         {/* Interactive Category Tabs */}
-        <div className="flex bg-primary-light/40 border border-primary/5 p-1.5 rounded-full mt-8 gap-1 w-full max-w-lg overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div id="product-tabs" className="flex bg-primary-light/40 border border-primary/5 p-1.5 rounded-full mt-8 gap-1 w-full max-w-lg overflow-x-auto scroll-mt-24 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <button 
             onClick={(e) => handleTabClick(e, "slices")}
             className={`flex-1 shrink-0 whitespace-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
@@ -122,7 +122,7 @@ export default function Products({
                 <div className="absolute w-24 h-24 rounded-full bg-primary/5 filter blur-sm -bottom-4 -right-4"></div>
                 
                 {/* Badges Container */}
-                <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10">
+                <div className="absolute top-3 left-3 right-3 flex justify-between items-start z-10">
                   {/* Tagline badge */}
                   <span className="bg-primary text-white text-[8px] sm:text-[9px] uppercase tracking-wider font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm shadow-primary/30">
                     No Added Sugar

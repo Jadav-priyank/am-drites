@@ -94,7 +94,7 @@ export default function Header({
                   type="text" 
                   placeholder="Search slices, powders..." 
                   value={searchQuery}
-                  onChange={(e) => { setSearchQuery(e.target.value); scrollTo("products"); }}
+                  onChange={(e) => { setSearchQuery(e.target.value); scrollTo("product-tabs"); }}
                   className="w-full text-xs px-3 py-2 rounded-lg bg-primary-light/50 border border-primary/5 focus:outline-none focus:border-primary text-foreground font-medium"
                   autoFocus
                 />
@@ -111,7 +111,7 @@ export default function Header({
                   type="text" 
                   placeholder="Search slices, powders..." 
                   value={searchQuery}
-                  onChange={(e) => { setSearchQuery(e.target.value); scrollTo("products"); }}
+                  onChange={(e) => { setSearchQuery(e.target.value); scrollTo("product-tabs"); }}
                   className="w-full text-xs px-3 py-2 rounded-lg bg-primary-light/50 border border-primary/5 focus:outline-none focus:border-primary text-foreground font-medium"
                   autoFocus
                 />

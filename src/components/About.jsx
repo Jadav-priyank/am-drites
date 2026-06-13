@@ -135,40 +135,40 @@ export default function About() {
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm mb-4 font-black group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 01
               </div>
-              <h4 className="font-outfit font-bold text-sm text-foreground">Careful Sourcing</h4>
-              <p className="text-[11px] text-foreground/60 mt-2 leading-relaxed">Selecting only premium fresh fruits and vegetables at peak ripeness.</p>
+              <h4 className="font-outfit font-bold text-base text-foreground">Careful Sourcing</h4>
+              <p className="text-xs text-foreground/60 mt-2 leading-relaxed">Selecting only premium fresh fruits and vegetables at peak ripeness.</p>
             </div>
 
             <div className="bg-primary-light/10 border border-primary/5 hover:border-primary/15 hover:bg-primary-light/20 p-6 rounded-3xl transition-all duration-300 text-center flex flex-col items-center group">
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm mb-4 font-black group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 02
               </div>
-              <h4 className="font-outfit font-bold text-sm text-foreground">Strict Hygiene</h4>
-              <p className="text-[11px] text-foreground/60 mt-2 leading-relaxed">Maintaining world-class hygiene standards and food safety practices.</p>
+              <h4 className="font-outfit font-bold text-base text-foreground">Strict Hygiene</h4>
+              <p className="text-xs text-foreground/60 mt-2 leading-relaxed">Maintaining world-class hygiene standards and food safety practices.</p>
             </div>
 
             <div className="bg-primary-light/10 border border-primary/5 hover:border-primary/15 hover:bg-primary-light/20 p-6 rounded-3xl transition-all duration-300 text-center flex flex-col items-center group">
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm mb-4 font-black group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 03
               </div>
-              <h4 className="font-outfit font-bold text-sm text-foreground">Preservative Free</h4>
-              <p className="text-[11px] text-foreground/60 mt-2 leading-relaxed">100% natural produce free from synthetic colors or added sugar.</p>
+              <h4 className="font-outfit font-bold text-base text-foreground">Preservative Free</h4>
+              <p className="text-xs text-foreground/60 mt-2 leading-relaxed">100% natural produce free from synthetic colors or added sugar.</p>
             </div>
 
             <div className="bg-primary-light/10 border border-primary/5 hover:border-primary/15 hover:bg-primary-light/20 p-6 rounded-3xl transition-all duration-300 text-center flex flex-col items-center group">
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm mb-4 font-black group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 04
               </div>
-              <h4 className="font-outfit font-bold text-sm text-foreground">Consistent Quality</h4>
-              <p className="text-[11px] text-foreground/60 mt-2 leading-relaxed">Rigorous taste, weight, and shelf-life checks for every batch packed.</p>
+              <h4 className="font-outfit font-bold text-base text-foreground">Consistent Quality</h4>
+              <p className="text-xs text-foreground/60 mt-2 leading-relaxed">Rigorous taste, weight, and shelf-life checks for every batch packed.</p>
             </div>
 
             <div className="bg-primary-light/10 border border-primary/5 hover:border-primary/15 hover:bg-primary-light/20 p-6 rounded-3xl transition-all duration-300 text-center flex flex-col items-center group">
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm mb-4 font-black group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 05
               </div>
-              <h4 className="font-outfit font-bold text-sm text-foreground">Process Focus</h4>
-              <p className="text-[11px] text-foreground/60 mt-2 leading-relaxed">Continuously upgrading tech to refine freezing and packing systems.</p>
+              <h4 className="font-outfit font-bold text-base text-foreground">Process Focus</h4>
+              <p className="text-xs text-foreground/60 mt-2 leading-relaxed">Continuously upgrading tech to refine freezing and packing systems.</p>
             </div>
 
           </div>

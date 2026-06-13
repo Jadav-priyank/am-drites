@@ -18,30 +18,30 @@
   --color-primary-light: var(--primary-light);
   --color-accent-green: var(--accent-green);
   --color-accent-green-light: var(--accent-green-light);
-  --font-sans: 'Plus Jakarta Sans', Arial, sans-serif;
-  --font-outfit: 'Outfit', sans-serif;
+  --font-sans: 'Nunito', Arial, sans-serif;
+  --font-outfit: 'Poppins', sans-serif;
   --font-playfair: 'Playfair Display', serif;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Nunito', sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 /* Custom premium scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fdfaf7;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #e5dfd8;
+  background: var(--primary);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ccc4ba;
+  background: var(--primary-hover);
 }
