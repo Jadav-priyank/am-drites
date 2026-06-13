@@ -60,20 +60,36 @@ export default function Header({
             >
               <Search className="w-5 h-5" />
             </button>
+
+            {/* Mobile search bar — fixed, full-width, centered below header */}
             {searchOpen && (
-              <div className="absolute right-0 mt-3 p-3 bg-white border border-primary/10 shadow-2xl rounded-2xl w-72 flex items-center gap-2 transform origin-top-right transition-all animate-in fade-in slide-in-from-top-2">
+              <div className="md:hidden fixed left-4 right-4 top-[72px] z-50 p-3 bg-white border border-primary/10 shadow-2xl rounded-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
                 <input 
                   type="text" 
                   placeholder="Search slices, powders..." 
                   value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    scrollTo("products");
-                  }}
+                  onChange={(e) => { setSearchQuery(e.target.value); scrollTo("products"); }}
                   className="w-full text-xs px-3 py-2 rounded-lg bg-primary-light/50 border border-primary/5 focus:outline-none focus:border-primary text-foreground font-medium"
                   autoFocus
                 />
-                <button onClick={() => { setSearchQuery(""); setSearchOpen(false); }} className="text-foreground/40 hover:text-primary">
+                <button onClick={() => { setSearchQuery(""); setSearchOpen(false); }} className="text-foreground/40 hover:text-primary flex-shrink-0">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
+            {/* Desktop search bar — absolute dropdown, right-aligned */}
+            {searchOpen && (
+              <div className="hidden md:flex absolute right-0 mt-3 w-72 p-3 bg-white border border-primary/10 shadow-2xl rounded-2xl items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                <input 
+                  type="text" 
+                  placeholder="Search slices, powders..." 
+                  value={searchQuery}
+                  onChange={(e) => { setSearchQuery(e.target.value); scrollTo("products"); }}
+                  className="w-full text-xs px-3 py-2 rounded-lg bg-primary-light/50 border border-primary/5 focus:outline-none focus:border-primary text-foreground font-medium"
+                  autoFocus
+                />
+                <button onClick={() => { setSearchQuery(""); setSearchOpen(false); }} className="text-foreground/40 hover:text-primary flex-shrink-0">
                   <X className="w-4 h-4" />
                 </button>
               </div>
