@@ -86,8 +86,8 @@ export default function CartDrawer({
                   </div>
 
                   <div className="flex-1">
-                    <h5 className="font-outfit font-bold text-xs text-foreground leading-tight line-clamp-1">{item.name}</h5>
-                    <span className="text-[10px] text-foreground/40 font-semibold">{item.size} • ₹{item.price} each</span>
+                    <h5 className="font-outfit font-bold text-sm text-foreground leading-tight line-clamp-1">{item.name}</h5>
+                    <span className="text-[11px] text-foreground/40 font-semibold">{item.size} • ₹{item.price} each</span>
                     
                     {/* Quantity counter */}
                     <div className="flex items-center gap-2 mt-2">
@@ -109,7 +109,7 @@ export default function CartDrawer({
 
                   {/* Actions */}
                   <div className="flex flex-col items-end gap-3">
-                    <span className="font-outfit font-black text-sm text-foreground">₹{item.price * item.quantity}</span>
+                    <span className="font-outfit font-black text-base text-foreground">₹{item.price * item.quantity}</span>
                     <button 
                       onClick={() => removeFromCart(item.id)}
                       className="text-foreground/30 hover:text-red-500 transition-colors p-1"
@@ -127,7 +127,7 @@ export default function CartDrawer({
                     <ShoppingBag className="w-8 h-8" />
                   </div>
                   <p className="font-outfit font-black text-base text-foreground/75">Your cup is empty</p>
-                  <p className="text-xs text-foreground/50 max-w-[200px] mt-1.5 leading-relaxed">Add nutritious slices or powders to start preserving nature&apos;s goodness in your meals.</p>
+                  <p className="text-sm text-foreground/50 max-w-[200px] mt-1.5 leading-relaxed">Add nutritious slices or powders to start preserving nature&apos;s goodness in your meals.</p>
                   <button 
                     onClick={() => setIsOpen(false)}
                     className="mt-6 bg-primary text-white text-xs font-bold px-6 py-3 rounded-full shadow-md shadow-primary/25 hover:bg-primary-hover"
@@ -139,7 +139,7 @@ export default function CartDrawer({
             </>
           ) : (
             <div className="flex flex-col gap-4">
-              <p className="text-sm text-foreground/70 font-semibold mb-2">Select Payment Method</p>
+              <p className="text-base text-foreground/70 font-semibold mb-2">Select Payment Method</p>
               
               {['COD', 'UPI', 'CARD'].map((method) => (
                 <label 
@@ -158,7 +158,7 @@ export default function CartDrawer({
                     <span className="font-bold text-foreground text-sm">
                       {method === 'COD' ? 'Cash on Delivery' : method === 'UPI' ? 'UPI / QR Code' : 'Credit / Debit Card'}
                     </span>
-                    <span className="text-xs text-foreground/50">
+                    <span className="text-sm text-foreground/50">
                       {method === 'COD' ? 'Pay when you receive the order' : method === 'UPI' ? 'Google Pay, PhonePe, Paytm' : 'Visa, Mastercard, RuPay'}
                     </span>
                   </div>
@@ -175,7 +175,7 @@ export default function CartDrawer({
               <span className="text-foreground/60">Subtotal</span>
               <span className="text-foreground">₹{cartTotal}</span>
             </div>
-            <div className="flex items-center justify-between text-xs text-foreground/50 mb-6">
+            <div className="flex items-center justify-between text-sm text-foreground/50 mb-6">
               <span>Shipping</span>
               <span>{cartTotal >= 499 ? "FREE" : "Calculated at checkout"}</span>
             </div>

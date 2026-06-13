@@ -65,17 +65,17 @@ export default function QuickViewModal({ product, onClose, onAddToCart }) {
             </div>
 
             {/* Description */}
-            <p className="text-xs text-foreground/70 leading-relaxed mb-6">
+            <p className="text-sm text-foreground/70 leading-relaxed mb-6">
               {product.description}
             </p>
 
             {/* Ingredients & Nutrition */}
             <div className="bg-primary-light/30 border border-primary/5 rounded-2xl p-4 mb-6">
-              <h5 className="font-outfit font-bold text-xs text-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <h5 className="font-outfit font-bold text-sm text-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Leaf className="w-3.5 h-3.5 text-primary fill-current" />
                 Ingredients & Nutrition
               </h5>
-              <p className="text-[11px] text-foreground/70 leading-relaxed">
+              <p className="text-xs text-foreground/70 leading-relaxed">
                 <strong className="text-foreground font-bold">Ingredients: </strong> {product.ingredients}
               </p>
               
@@ -104,7 +104,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }) {
           {/* Price & Action */}
           <div className="flex items-center justify-between pt-5 border-t border-primary/5">
             <div>
-              <span className="text-[10px] text-foreground/40 font-bold block uppercase tracking-wider">Total Price</span>
+              <span className="text-[11px] text-foreground/40 font-bold block uppercase tracking-wider">Total Price</span>
               <span className="text-2xl font-outfit font-black text-primary">₹{product.price}</span>
             </div>
 

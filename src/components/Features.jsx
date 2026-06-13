@@ -43,7 +43,7 @@ export default function Features() {
           </div>
           <div>
             <h4 className="font-outfit font-bold text-base text-foreground">100% Natural</h4>
-            <p className="text-xs text-foreground/70 mt-1 leading-relaxed">No added sugar, artificial preservatives, or chemical additives. pure fruit goodness.</p>
+            <p className="text-sm text-foreground/70 mt-1 leading-relaxed">No added sugar, artificial preservatives, or chemical additives. pure fruit goodness.</p>
           </div>
         </div>
 
@@ -53,7 +53,7 @@ export default function Features() {
           </div>
           <div>
             <h4 className="font-outfit font-bold text-base text-foreground">Nutrition Locked</h4>
-            <p className="text-xs text-foreground/70 mt-1 leading-relaxed">Advanced freeze-drying technology locks in natural vitamins, colors, and rich aromas.</p>
+            <p className="text-sm text-foreground/70 mt-1 leading-relaxed">Advanced freeze-drying technology locks in natural vitamins, colors, and rich aromas.</p>
           </div>
         </div>
 
@@ -63,7 +63,7 @@ export default function Features() {
           </div>
           <div>
             <h4 className="font-outfit font-bold text-base text-foreground">Convenient Pack</h4>
-            <p className="text-xs text-foreground/70 mt-1 leading-relaxed">Lightweight, travel-friendly packs with long shelf life for nutrition on the go.</p>
+            <p className="text-sm text-foreground/70 mt-1 leading-relaxed">Lightweight, travel-friendly packs with long shelf life for nutrition on the go.</p>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ export default function Features() {
           </div>
           <div>
             <h4 className="font-outfit font-bold text-base text-foreground">Made In India</h4>
-            <p className="text-xs text-foreground/70 mt-1 leading-relaxed">Sourced responsibly from Indian farms, prepared with hygiene and care.</p>
+            <p className="text-sm text-foreground/70 mt-1 leading-relaxed">Sourced responsibly from Indian farms, prepared with hygiene and care.</p>
           </div>
         </div>
 

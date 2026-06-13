@@ -67,7 +67,7 @@ export default function Products({
         <h3 className="products-title text-3xl md:text-4xl font-outfit font-black text-foreground">
           Nature&apos;s Bounty, Freeze-Dried
         </h3>
-        <p className="products-title text-xs md:text-sm text-foreground/60 max-w-lg mt-3">
+        <p className="products-title text-sm md:text-base text-foreground/60 max-w-lg mt-3">
           Pure, nutrient-dense products. Select a category to explore slices, fruit powders, or cooking essentials.
         </p>
 
@@ -163,7 +163,7 @@ export default function Products({
               </h4>
 
               {/* Description */}
-              <p className="text-xs text-foreground/60 leading-relaxed mb-6 px-1 line-clamp-2">
+              <p className="text-sm text-foreground/60 leading-relaxed mb-6 px-1 line-clamp-2">
                 {product.description}
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function Products({
             {/* Price & Action */}
             <div className="flex items-center justify-between pt-4 border-t border-primary/5 px-1">
               <div>
-                <span className="text-[10px] text-foreground/40 font-bold block uppercase tracking-wider">Price</span>
+                <span className="text-[11px] text-foreground/40 font-bold block uppercase tracking-wider">Price</span>
                 <span className="text-xl font-outfit font-black text-foreground">₹{product.price}</span>
               </div>
 
@@ -193,7 +193,7 @@ export default function Products({
           <div className="col-span-full py-16 text-center flex flex-col items-center">
             <Info className="w-12 h-12 text-primary/40 mb-3" />
             <p className="font-bold text-foreground/75">No products found matching &quot;{searchQuery}&quot;</p>
-            <p className="text-xs text-foreground/50 mt-1">Try refining your keyword or select another category above.</p>
+            <p className="text-sm text-foreground/50 mt-1">Try refining your keyword or select another category above.</p>
             <button 
               onClick={clearSearch}
               className="mt-4 text-xs font-bold text-primary underline"

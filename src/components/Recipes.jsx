@@ -14,7 +14,7 @@ export default function Recipes({ scrollTo }) {
           <h3 className="text-3xl md:text-4xl font-outfit font-black text-foreground leading-tight">
             Made with pure, real ingredients.
           </h3>
-          <p className="text-sm text-foreground/75 leading-relaxed">
+          <p className="text-base text-foreground/75 leading-relaxed">
             Our products are incredibly versatile. Add nutritional power to your daily meals without complex prep. Perfect for healthy snacking, smoothies, baking, breakfast bowls, desserts, travel, and everyday nutrition.
           </p>
 
@@ -22,19 +22,19 @@ export default function Recipes({ scrollTo }) {
           <div className="grid grid-cols-2 gap-4 mt-2">
             <div className="border border-primary/5 bg-white p-4 rounded-2xl flex flex-col gap-1.5 shadow-sm hover:border-primary/10 transition-colors">
               <span className="text-primary text-xs font-black uppercase tracking-wider">Smoothies</span>
-              <p className="text-[11px] text-foreground/50">Add 1 scoop of Mango or Strawberry powder for a luscious natural flavor boost.</p>
+              <p className="text-xs text-foreground/50">Add 1 scoop of Mango or Strawberry powder for a luscious natural flavor boost.</p>
             </div>
             <div className="border border-primary/5 bg-white p-4 rounded-2xl flex flex-col gap-1.5 shadow-sm hover:border-primary/10 transition-colors">
               <span className="text-primary text-xs font-black uppercase tracking-wider">Snacking</span>
-              <p className="text-[11px] text-foreground/50">Munch on crisp Kiwi or Banana slices directly out of the packet.</p>
+              <p className="text-xs text-foreground/50">Munch on crisp Kiwi or Banana slices directly out of the packet.</p>
             </div>
             <div className="border border-primary/5 bg-white p-4 rounded-2xl flex flex-col gap-1.5 shadow-sm hover:border-primary/10 transition-colors">
               <span className="text-primary text-xs font-black uppercase tracking-wider">Baking</span>
-              <p className="text-[11px] text-foreground/50">Incorporate Beetroot powder into dough or Strawberry powder in frostings.</p>
+              <p className="text-xs text-foreground/50">Incorporate Beetroot powder into dough or Strawberry powder in frostings.</p>
             </div>
             <div className="border border-primary/5 bg-white p-4 rounded-2xl flex flex-col gap-1.5 shadow-sm hover:border-primary/10 transition-colors">
               <span className="text-primary text-xs font-black uppercase tracking-wider">Bowls</span>
-              <p className="text-[11px] text-foreground/50">Top your morning Greek yogurt or oats with colorful Apple and Strawberry slices.</p>
+              <p className="text-xs text-foreground/50">Top your morning Greek yogurt or oats with colorful Apple and Strawberry slices.</p>
             </div>
           </div>
 
@@ -61,7 +61,7 @@ export default function Recipes({ scrollTo }) {
             <div className="flex items-center justify-between px-2">
               <div>
                 <h4 className="font-outfit font-bold text-base text-foreground">Anti-Oxidant Berry Breakfast Bowl</h4>
-                <p className="text-[11px] text-foreground/50 mt-0.5">Prep time: 2 mins • 100% Vegan & Gluten Free</p>
+                <p className="text-xs text-foreground/50 mt-0.5">Prep time: 2 mins • 100% Vegan & Gluten Free</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary">
                 <Heart className="w-5 h-5 fill-current" />

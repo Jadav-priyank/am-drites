@@ -12,6 +12,10 @@ import QuickViewModal from "../components/QuickViewModal";
 import CartDrawer from "../components/CartDrawer";
 import AuthModal from "../components/AuthModal";
 import { Sparkles } from "lucide-react";
+import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 // Product Database
 const PRODUCTS = [
@@ -300,12 +304,13 @@ export default function Home() {
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Smooth scroll helper
+  // Smooth scroll helper using GSAP
   const scrollTo = (elementId) => {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: { y: `#${elementId}`, offsetY: 80 },
+      ease: "power3.inOut"
+    });
   };
 
   return (

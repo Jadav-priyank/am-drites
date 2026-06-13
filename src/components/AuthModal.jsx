@@ -90,7 +90,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
             <h3 className="font-outfit font-extrabold text-2xl text-foreground">
               {activeTab === "login" ? "Welcome Back" : "Create Account"}
             </h3>
-            <p className="text-xs text-foreground/50 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               {activeTab === "login" 
                 ? "Sign in to access your orders and saved items." 
                 : "Join us to preserve nature's goodness in your meals."}
@@ -116,7 +116,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm text-foreground transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
                 />
               </div>
             )}
@@ -132,7 +132,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm text-foreground transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
               />
             </div>
 
@@ -148,7 +148,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
                 onChange={handleChange}
                 required
                 minLength={6}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm text-foreground transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
               />
             </div>
 
