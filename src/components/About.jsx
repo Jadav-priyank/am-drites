@@ -62,7 +62,7 @@ export default function About() {
             </h3>
             
             <p className="story-animate text-sm text-foreground/80 leading-relaxed font-medium">
-              At **AM DRIETS**, we believe healthy food should be convenient, delicious, and as close to nature as possible. We specialize in premium freeze-dried fruits and vegetable powders that preserve the natural taste, color, aroma, and nutritional value of fresh produce.
+              At <strong className="font-extrabold text-foreground">AM DRIETS</strong>, we believe healthy food should be convenient, delicious, and as close to nature as possible. We specialize in premium freeze-dried fruits and vegetable powders that preserve the natural taste, color, aroma, and nutritional value of fresh produce.
             </p>
             
             <p className="story-animate text-sm text-foreground/70 leading-relaxed">

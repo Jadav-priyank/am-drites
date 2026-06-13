@@ -40,7 +40,7 @@ export default function Recipes({ scrollTo }) {
 
           <button 
             onClick={() => scrollTo("products")}
-            className="self-start mt-4 border border-primary text-primary hover:bg-primary hover:text-white text-xs font-black px-6 py-3.5 rounded-full shadow-lg shadow-primary/5 transition-all duration-300"
+            className="self-center lg:self-start mt-4 border border-primary text-primary hover:bg-primary hover:text-white text-xs font-black px-6 py-3.5 rounded-full shadow-lg shadow-primary/5 transition-all duration-300"
           >
             Explore Slices & Powders
           </button>

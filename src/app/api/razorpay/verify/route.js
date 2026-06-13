@@ -1,0 +1,60 @@
+import { NextResponse } from 'next/server';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import connectToDatabase from '@/lib/mongodb';
+import Order from '@/models/Order';
+
+export async function POST(request) {
+  try {
+    const token = request.cookies.get('token')?.value;
+    
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'am-drites-super-secret-key');
+    
+    const { 
+      razorpay_order_id, 
+      razorpay_payment_id, 
+      razorpay_signature,
+      items,
+      totalAmount,
+      paymentMethod
+    } = await request.json();
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json({ error: 'Missing required payment fields' }, { status: 400 });
+    }
+    
+    
+    const secret = process.env.RAZORPAY_KEY_SECRET || 'placeholder';
+    
+    // Create signature to verify
+    const generated_signature = crypto
+      .createHmac('sha256', secret)
+      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .digest('hex');
+      
+    if (generated_signature !== razorpay_signature) {
+      return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
+    }
+    
+    // Verification successful, create the order in DB
+    await connectToDatabase();
+    
+    const order = await Order.create({
+      user: decoded.userId,
+      items,
+      totalAmount,
+      status: 'Completed',
+      paymentMethod,
+      paymentStatus: 'Paid'
+    });
+    
+    return NextResponse.json({ success: true, order }, { status: 201 });
+  } catch (error) {
+    console.error('Razorpay Verification Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Leaf } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer({ scrollTo, setActiveCategory }) {
   return (
@@ -85,16 +86,13 @@ export default function Footer({ scrollTo, setActiveCategory }) {
           
           {/* Footer Logo & Brand */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-lg">
-                <Leaf className="text-white w-5 h-5 fill-current" />
-              </div>
-              <div>
-                <h2 className="text-xl font-outfit font-extrabold tracking-wide text-white">
-                  AM <span className="text-primary">DRIETS</span>
-                </h2>
-                <p className="text-[9px] font-semibold text-primary/80 uppercase tracking-widest -mt-1 font-outfit">Nature Preserved</p>
-              </div>
+            <div className="relative w-16 h-16 cursor-pointer opacity-90 hover:opacity-100 transition-transform hover:scale-105 bg-white rounded-2xl overflow-hidden shadow-lg p-1">
+              <Image 
+                src="/logo.jpeg" 
+                alt="AM DRIETS Logo" 
+                fill 
+                className="object-contain p-1.5" 
+              />
             </div>
             <p className="text-xs text-white/60 leading-relaxed max-w-sm mt-2">
               Bringing the goodness of nature to your everyday life—one crunchy bite and one nutritious scoop at a time. Made with love in India.

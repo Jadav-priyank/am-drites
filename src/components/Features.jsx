@@ -38,7 +38,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <div className="badge-card bg-primary-light/25 hover:bg-primary-light/50 border border-primary/5 hover:border-primary/15 p-6 rounded-2xl flex items-start gap-4 transition-all duration-300 group hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+          <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
@@ -48,7 +48,7 @@ export default function Features() {
         </div>
 
         <div className="badge-card bg-primary-light/25 hover:bg-primary-light/50 border border-primary/5 hover:border-primary/15 p-6 rounded-2xl flex items-start gap-4 transition-all duration-300 group hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+          <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
             <Leaf className="w-6 h-6" />
           </div>
           <div>
@@ -58,7 +58,7 @@ export default function Features() {
         </div>
 
         <div className="badge-card bg-primary-light/25 hover:bg-primary-light/50 border border-primary/5 hover:border-primary/15 p-6 rounded-2xl flex items-start gap-4 transition-all duration-300 group hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+          <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
             <Clock className="w-6 h-6" />
           </div>
           <div>
@@ -68,7 +68,7 @@ export default function Features() {
         </div>
 
         <div className="badge-card bg-primary-light/25 hover:bg-primary-light/50 border border-primary/5 hover:border-primary/15 p-6 rounded-2xl flex items-start gap-4 transition-all duration-300 group hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+          <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-white flex items-center justify-center shadow-md shadow-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>

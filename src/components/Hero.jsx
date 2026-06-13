@@ -73,10 +73,10 @@ export default function Hero({ scrollTo }) {
           {/* Background warm orb */}
           <div className="absolute w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] bg-gradient-to-tr from-primary/10 to-amber-400/25 rounded-full filter blur-xl opacity-60" />
           
-          {/* Orange Fabric / Swoosh element from the reference image */}
+          {/* Orange Fabric / Swoosh element from the reference image
           <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-60 sm:w-80 h-32 bg-primary rounded-tl-[100px] rounded-br-[60px] transform rotate-12 opacity-95 -z-10 shadow-2xl overflow-hidden shadow-primary/20">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

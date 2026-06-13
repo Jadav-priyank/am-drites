@@ -46,11 +46,16 @@ export default function Products({
     return matchesCategory && (searchQuery ? matchesSearch : true);
   });
 
+  const handleTabClick = (e, category) => {
+    setActiveCategory(category);
+    e.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  };
+
   return (
     <section 
       id="products" 
       ref={containerRef}
-      className="py-20 px-6 md:px-12 bg-background relative overflow-hidden"
+      className="py-20 px-6 md:px-12 bg-background relative overflow-hidden scroll-mt-24"
     >
       {/* Category Header */}
       <div className="max-w-7xl mx-auto text-center mb-12 flex flex-col items-center">
@@ -67,10 +72,10 @@ export default function Products({
         </p>
 
         {/* Interactive Category Tabs */}
-        <div className="flex bg-primary-light/40 border border-primary/5 p-1.5 rounded-full mt-8 gap-1 w-full max-w-lg overflow-x-auto">
+        <div className="flex bg-primary-light/40 border border-primary/5 p-1.5 rounded-full mt-8 gap-1 w-full max-w-lg overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <button 
-            onClick={() => setActiveCategory("slices")}
-            className={`flex-1 text-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
+            onClick={(e) => handleTabClick(e, "slices")}
+            className={`flex-1 shrink-0 whitespace-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
               activeCategory === "slices" 
                 ? "bg-primary text-white shadow-md shadow-primary/25" 
                 : "text-foreground hover:text-primary hover:bg-white/40"
@@ -79,8 +84,8 @@ export default function Products({
             Fruit Slices
           </button>
           <button 
-            onClick={() => setActiveCategory("powders")}
-            className={`flex-1 text-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
+            onClick={(e) => handleTabClick(e, "powders")}
+            className={`flex-1 shrink-0 whitespace-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
               activeCategory === "powders" 
                 ? "bg-primary text-white shadow-md shadow-primary/25" 
                 : "text-foreground hover:text-primary hover:bg-white/40"
@@ -89,8 +94,8 @@ export default function Products({
             Fruit Powders
           </button>
           <button 
-            onClick={() => setActiveCategory("vegetables")}
-            className={`flex-1 text-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
+            onClick={(e) => handleTabClick(e, "vegetables")}
+            className={`flex-1 shrink-0 whitespace-nowrap py-3 px-5 text-xs font-bold rounded-full transition-all duration-300 ${
               activeCategory === "vegetables" 
                 ? "bg-primary text-white shadow-md shadow-primary/25" 
                 : "text-foreground hover:text-primary hover:bg-white/40"
@@ -106,7 +111,8 @@ export default function Products({
         {filteredProducts.map((product) => (
           <div 
             key={product.id}
-            className="bg-white border border-primary/5 hover:border-primary/15 rounded-3xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-between"
+            onClick={() => onQuickView(product)}
+            className="cursor-pointer bg-white border border-primary/5 hover:border-primary/15 rounded-3xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-between"
           >
             <div>
               {/* Product image container */}
@@ -115,10 +121,18 @@ export default function Products({
                 <div className="absolute w-24 h-24 rounded-full bg-white/40 filter blur-md -top-2 -left-2"></div>
                 <div className="absolute w-24 h-24 rounded-full bg-primary/5 filter blur-sm -bottom-4 -right-4"></div>
                 
-                {/* Floating badge */}
-                <span className="absolute top-3 right-3 bg-white text-primary text-[10px] font-extrabold px-3 py-1.5 rounded-full shadow-sm">
-                  {product.tag}
-                </span>
+                {/* Badges Container */}
+                <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10">
+                  {/* Tagline badge */}
+                  <span className="bg-primary text-white text-[8px] sm:text-[9px] uppercase tracking-wider font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm shadow-primary/30">
+                    No Added Sugar
+                  </span>
+                  
+                  {/* Floating badge */}
+                  <span className="bg-white text-primary text-[8px] sm:text-[10px] font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
+                    {product.tag}
+                  </span>
+                </div>
 
                 {/* representation utilizing our generated mockups */}
                 <div className="relative w-3/5 h-4/5 transform group-hover:scale-110 group-hover:rotate-2 transition-transform duration-500">
@@ -162,22 +176,13 @@ export default function Products({
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Quick View Button */}
-                <button 
-                  onClick={() => onQuickView(product)}
-                  className="p-3 bg-primary-light hover:bg-primary/10 text-primary rounded-xl transition-colors"
-                  title="Quick View"
-                >
-                  <Eye className="w-4.5 h-4.5" />
-                </button>
-
                 {/* Add to Cart Button */}
                 <button 
-                  onClick={() => onAddToCart(product)}
-                  className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-black px-4 py-3 rounded-xl shadow-md shadow-primary/10 transition-colors"
+                  onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+                  className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-black px-6 py-3 rounded-xl shadow-md shadow-primary/10 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  Add
+                  Add to Cart
                 </button>
               </div>
             </div>

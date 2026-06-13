@@ -16,6 +16,8 @@ export const metadata = {
   description: "Premium freeze-dried fruits and vegetable powders that preserve the natural taste, color, aroma, and nutritional value of fresh produce.",
 };
 
+import ClientToaster from '../components/ClientToaster';
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -27,7 +29,10 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <ClientToaster richColors position="bottom-center" toastOptions={{ className: "font-outfit" }} />
+      </body>
     </html>
   );
 }

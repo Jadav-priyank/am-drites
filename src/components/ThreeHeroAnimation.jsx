@@ -132,7 +132,7 @@ export default function ThreeHeroAnimation() {
         name: "mango",
         path: "/fruit_mango.png",
         heroSize: 1.8,
-        heroPos: [0.0, 0.6, 0],
+        heroPos: [-0.2, 0.8, 0],
         heroRot: [0, 0, -0.12],
         rotSpeedZ: 0.002,
         floatSpeed: 0.005,
@@ -142,7 +142,7 @@ export default function ThreeHeroAnimation() {
         name: "strawberry",
         path: "/fruit_strawberry.png",
         heroSize: 1.2,
-        heroPos: [2.2, -0.3, 0.3],
+        heroPos: [3.2, -0.8, 0.3],
         heroRot: [0, 0, 0.18],
         rotSpeedZ: -0.003,
         floatSpeed: 0.007,
@@ -152,7 +152,7 @@ export default function ThreeHeroAnimation() {
         name: "kiwi",
         path: "/fruit_kiwi.png",
         heroSize: 1.3,
-        heroPos: [1.6, 1.6, 0.1],
+        heroPos: [2.5, 2.8, 0.1],
         heroRot: [0, 0, 0.35],
         rotSpeedZ: 0.0025,
         floatSpeed: 0.004,
@@ -162,7 +162,7 @@ export default function ThreeHeroAnimation() {
         name: "banana",
         path: "/fruit_banana.png",
         heroSize: 1.6,
-        heroPos: [-2.0, -0.6, 0.2],
+        heroPos: [-3.2, -1.0, 0.2],
         heroRot: [0, 0, -0.25],
         rotSpeedZ: -0.002,
         floatSpeed: 0.006,
@@ -172,7 +172,7 @@ export default function ThreeHeroAnimation() {
         name: "orange",
         path: "/fruit_orange.png",
         heroSize: 1.4,
-        heroPos: [0.6, -1.8, -0.1],
+        heroPos: [1.2, -2.8, -0.1],
         heroRot: [0, 0, 0.12],
         rotSpeedZ: 0.003,
         floatSpeed: 0.005,
@@ -182,7 +182,7 @@ export default function ThreeHeroAnimation() {
         name: "blueberry",
         path: "/fruit_blueberry.png",
         heroSize: 0.8,
-        heroPos: [-1.0, -1.6, 0.4],
+        heroPos: [-1.8, -2.4, 0.4],
         heroRot: [0, 0, 0.1],
         rotSpeedZ: 0.004,
         floatSpeed: 0.008,
@@ -244,8 +244,8 @@ export default function ThreeHeroAnimation() {
         const bgSize = config.heroSize * 0.45;
         const bgMesh = createFruitPlane(texture, bgSize);
         bgMesh.position.set(
-          (Math.random() - 0.5) * 12,
-          (Math.random() - 0.5) * 8,
+          (Math.random() - 0.5) * 20,
+          (Math.random() - 0.5) * 14,
           (Math.random() - 0.5) * 3 - 2.5
         );
         bgMesh.rotation.set(0, 0, Math.random() * Math.PI * 2);
@@ -265,7 +265,7 @@ export default function ThreeHeroAnimation() {
     textureLoader.load("/fruit_blueberry.png", (loadedTexture) => {
       const texture = removeBackground(loadedTexture.image);
       const blueberry2 = createFruitPlane(texture, 0.6);
-      blueberry2.position.set(0.5, 1.2, 0.2);
+      blueberry2.position.set(0.8, 2.2, 0.2);
       blueberry2.rotation.set(0, 0, -0.2);
       blueberry2.userData = {
         rotSpeedZ: -0.003,

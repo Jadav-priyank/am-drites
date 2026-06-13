@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Features from "../components/Features";
@@ -10,6 +10,7 @@ import Recipes from "../components/Recipes";
 import Footer from "../components/Footer";
 import QuickViewModal from "../components/QuickViewModal";
 import CartDrawer from "../components/CartDrawer";
+import AuthModal from "../components/AuthModal";
 import { Sparkles } from "lucide-react";
 
 // Product Database
@@ -239,6 +240,26 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState("slices");
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data.user) {
+          setUser(data.user);
+          setIsLoggedIn(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkSession();
+  }, []);
+
   // Add Item to Cart
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
@@ -304,6 +325,14 @@ export default function Home() {
         setSearchOpen={setSearchOpen}
         scrollTo={scrollTo}
         setActiveCategory={setActiveCategory}
+        isLoggedIn={isLoggedIn}
+        user={user}
+        setAuthModalOpen={setAuthModalOpen}
+        handleLogout={async () => {
+          await fetch("/api/auth/logout", { method: "POST" });
+          setUser(null);
+          setIsLoggedIn(false);
+        }}
       />
 
       <Hero scrollTo={scrollTo} />
@@ -338,12 +367,23 @@ export default function Home() {
         cartTotal={cartTotal}
         cartItemCount={cartItemCount}
         clearCart={clearCart}
+        isLoggedIn={isLoggedIn}
+        setAuthModalOpen={setAuthModalOpen}
       />
 
       <QuickViewModal 
         product={quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
         onAddToCart={addToCart}
+      />
+
+      <AuthModal 
+        isOpen={authModalOpen} 
+        setIsOpen={setAuthModalOpen} 
+        onAuthSuccess={(u) => {
+          setUser(u);
+          setIsLoggedIn(true);
+        }} 
       />
     </div>
   );
