@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Leaf, MapPin, Award } from "lucide-react";
 import gsap from "gsap";
@@ -13,6 +13,41 @@ if (typeof window !== "undefined") {
 
 export default function About() {
   const containerRef = useRef(null);
+  const [selected, setSelected] = useState(null);
+
+  const PHOTOS = [
+    {
+      src: "/realfruits.jpg",
+      label: "Freeze-Dried Fruits",
+      tags: ["100% Natural", "No Sugar Added"],
+      desc: "A vibrant medley of freeze-dried seasonal fruits — packed at the peak of ripeness to lock in every bit of natural flavour, colour, and nutrition. Perfect as a crunchy snack straight from the pack or stirred into yoghurt, oats, and smoothies."
+    },
+    {
+      src: "/realmango.jpg",
+      label: "Mango Slices",
+      tags: ["Premium Alphonso", "Melt-in-Mouth"],
+      desc: "Thin, golden slices of premium Alphonso mango, freeze-dried to preserve their tropical sweetness and silky texture. Enjoy the taste of summer all year round — no mess, no fridge needed."
+    },
+    {
+      src: "/realkiwi.jpg",
+      label: "Kiwi Snacks",
+      tags: ["Vitamin C Rich", "Tangy & Crispy"],
+      desc: "Bright green kiwi rounds with their signature tangy-sweet punch, transformed into feather-light crisps through freeze-drying. High in Vitamin C and dietary fibre — a guilt-free, travel-friendly treat."
+    },
+    {
+      src: "/realstrawberry.jpg",
+      label: "Strawberry Bites",
+      tags: ["Antioxidant Rich", "Kid Favourite"],
+      desc: "Sun-ripened strawberries freeze-dried into delicate, ruby-red bites that shatter with flavour. Rich in antioxidants and naturally sweet — a favourite among kids and fitness lovers alike."
+    },
+  ];
+
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") setSelected(null); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   useGSAP(() => {
     gsap.fromTo(".story-animate",
@@ -85,26 +120,26 @@ export default function About() {
           {/* Story Right: Real product photo grid */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-3">
 
-            {[
-              { src: "/realfruits.jpg",      label: "Freeze-Dried Fruits"    },
-              { src: "/realmango.jpg",        label: "Mango Slices"           },
-              { src: "/realkiwi.jpg",         label: "Kiwi Snacks"            },
-              { src: "/realstrawberry.jpg",   label: "Strawberry Bites"       },
-            ].map(({ src, label }) => (
+            {PHOTOS.map((photo) => (
               <div
-                key={src}
-                className="story-box relative aspect-square rounded-2xl overflow-hidden shadow-md group"
+                key={photo.src}
+                onClick={() => setSelected(photo)}
+                className="story-box relative aspect-square rounded-2xl overflow-hidden shadow-md group cursor-pointer"
               >
                 <Image
-                  src={src}
-                  alt={label}
+                  src={photo.src}
+                  alt={photo.label}
                   fill
                   sizes="(max-width:768px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                {/* Label overlay */}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="text-white text-xs font-bold">{label}</span>
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <span className="bg-white/90 text-foreground text-[10px] font-bold px-3 py-1 rounded-full shadow">Tap to view</span>
+                </div>
+                {/* Label */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
+                  <span className="text-white text-xs font-bold">{photo.label}</span>
                 </div>
               </div>
             ))}
@@ -113,6 +148,64 @@ export default function About() {
 
         </div>
       </section>
+
+      {/* ── Photo popup modal ─────────────────────────────────── */}
+      {selected && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelected(null)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+          {/* Card */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+            style={{ animation: "popIn 0.22s cubic-bezier(.34,1.56,.64,1) both" }}
+          >
+            {/* Image */}
+            <div className="relative w-full h-52">
+              <Image
+                src={selected.src}
+                alt={selected.label}
+                fill
+                className="object-cover"
+                sizes="400px"
+              />
+              {/* Close button */}
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute top-3 right-3 w-8 h-8 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center text-lg font-bold transition-colors"
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5">
+              <h4 className="font-outfit font-black text-xl text-foreground mb-2">{selected.label}</h4>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {selected.tags.map(tag => (
+                  <span key={tag} className="text-[10px] font-bold bg-primary-light text-primary px-2.5 py-1 rounded-full">{tag}</span>
+                ))}
+              </div>
+
+              <p className="text-sm text-foreground/70 leading-relaxed">{selected.desc}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes popIn {
+          from { opacity: 0; transform: scale(0.88); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
 
       {/* ----------------- QUALITY COMMITMENT SECTION ----------------- */}
       <section id="quality" className="py-24 bg-white px-6 md:px-12 relative overflow-hidden border-b border-primary/5">
