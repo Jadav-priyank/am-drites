@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { Leaf, MapPin, Eye, TrendingUp, Award } from "lucide-react";
+import Image from "next/image";
+import { Leaf, MapPin, Award } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -81,34 +82,32 @@ export default function About() {
             </div>
           </div>
 
-          {/* Story Right: Cards showing Mission, Vision */}
-          <div className="lg:col-span-6 flex flex-col gap-6">
+          {/* Story Right: Real product photo grid */}
+          <div className="lg:col-span-6 grid grid-cols-2 gap-3">
 
-            {/* Mission Card */}
-            <div className="story-box bg-white border border-primary/5 hover:border-primary/10 p-6 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center text-primary">
-                  <TrendingUp className="w-5 h-5" />
+            {[
+              { src: "/realfruits.jpg",      label: "Freeze-Dried Fruits"    },
+              { src: "/realmango.jpg",        label: "Mango Slices"           },
+              { src: "/realkiwi.jpg",         label: "Kiwi Snacks"            },
+              { src: "/realstrawberry.jpg",   label: "Strawberry Bites"       },
+            ].map(({ src, label }) => (
+              <div
+                key={src}
+                className="story-box relative aspect-square rounded-2xl overflow-hidden shadow-md group"
+              >
+                <Image
+                  src={src}
+                  alt={label}
+                  fill
+                  sizes="(max-width:768px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                {/* Label overlay */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-white text-xs font-bold">{label}</span>
                 </div>
-                <h4 className="font-outfit font-black text-lg text-foreground">Our Mission</h4>
               </div>
-              <p className="text-sm text-foreground/75 leading-relaxed font-medium">
-                To deliver high-quality freeze-dried fruits and vegetables that help people make healthier food choices without compromising on taste, convenience, or quality.
-              </p>
-            </div>
-
-            {/* Vision Card */}
-            <div className="story-box bg-white border border-primary/5 hover:border-primary/10 p-6 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center text-primary">
-                  <Eye className="w-5 h-5" />
-                </div>
-                <h4 className="font-outfit font-black text-lg text-foreground">Our Vision</h4>
-              </div>
-              <p className="text-sm text-foreground/75 leading-relaxed font-medium">
-                To become a trusted Indian brand in freeze-dried nutrition by offering innovative, natural, and premium products that support healthier lifestyles across households, fitness communities, and food industries.
-              </p>
-            </div>
+            ))}
 
           </div>
 
