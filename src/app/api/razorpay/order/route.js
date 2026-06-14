@@ -19,11 +19,12 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid amount. Minimum amount must be 1 INR (100 paise)' }, { status: 400 });
     }
     
-    // Initialize razorpay instance
-    // Note: User must replace these placeholders in .env.local with real Test API Keys
+    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'placeholder';
+
     const razorpay = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
-      key_secret: process.env.RAZORPAY_KEY_SECRET || 'placeholder',
+      key_id: keyId,
+      key_secret: keySecret,
     });
     
     const options = {
@@ -31,10 +32,9 @@ export async function POST(request) {
       currency: "INR",
       receipt: `receipt_order_${Date.now()}`,
     };
-    
     const order = await razorpay.orders.create(options);
     
-    return NextResponse.json({ success: true, order }, { status: 201 });
+    return NextResponse.json({ success: true, order, keyId }, { status: 201 });
   } catch (error) {
     console.error('Razorpay Order Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

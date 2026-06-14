@@ -55,6 +55,7 @@ export default function Recipes({ scrollTo }) {
                 src="/recipe_smoothie_bowl.png" 
                 alt="Smoothie Bowl Recipe" 
                 fill 
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 576px"
                 className="object-cover group-hover:scale-105 transition-transform duration-700" 
               />
             </div>

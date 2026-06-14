@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Leaf, MapPin, Eye, TrendingUp, Award } from "lucide-react";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,8 +15,8 @@ export default function About() {
   const containerRef = useRef(null);
 
   useGSAP(() => {
-    gsap.fromTo(".story-animate", 
-      { x: -50, opacity: 0 }, 
+    gsap.fromTo(".story-animate",
+      { x: -50, opacity: 0 },
       {
         x: 0,
         opacity: 1,
@@ -28,8 +29,8 @@ export default function About() {
       }
     );
 
-    gsap.fromTo(".story-box", 
-      { scale: 0.9, opacity: 0 }, 
+    gsap.fromTo(".story-box",
+      { scale: 0.9, opacity: 0 },
       {
         scale: 1,
         opacity: 1,
@@ -53,18 +54,18 @@ export default function About() {
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          
+
           {/* Story Left: Story Narrative */}
           <div className="lg:col-span-6 flex flex-col gap-6">
             <span className="story-animate text-primary font-playfair italic text-lg md:text-xl font-semibold">Our Journey</span>
             <h3 className="story-animate text-3xl md:text-4xl font-outfit font-black text-foreground leading-tight">
               Preserving Nature&apos;s Goodness Since Day One
             </h3>
-            
+
             <p className="story-animate text-base text-foreground/80 leading-relaxed font-medium">
               At <strong className="font-extrabold text-foreground">AM DRIETS</strong>, we believe healthy food should be convenient, delicious, and as close to nature as possible. We specialize in premium freeze-dried fruits and vegetable powders that preserve the natural taste, color, aroma, and nutritional value of fresh produce.
             </p>
-            
+
             <p className="story-animate text-base text-foreground/70 leading-relaxed">
               Our journey began with a simple vision: to make nutritious fruits and vegetables available year-round in a convenient form without relying on artificial preservatives, added sugar, or unnecessary additives. Through advanced freeze-drying technology, we transform carefully selected produce into wholesome snacks and versatile powders while maintaining their natural goodness.
             </p>
@@ -81,33 +82,85 @@ export default function About() {
             </div>
           </div>
 
-          {/* Story Right: Cards showing Mission, Vision */}
-          <div className="lg:col-span-6 flex flex-col gap-6">
-            
-            {/* Mission Card */}
-            <div className="story-box bg-white border border-primary/5 hover:border-primary/10 p-6 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center text-primary">
-                  <TrendingUp className="w-5 h-5" />
+          {/* Story Right: Real product photo mosaic */}
+          <div className="lg:col-span-6 grid grid-cols-2 gap-3">
+
+            {/* Top-left: realfruits */}
+            <div className="story-box relative rounded-3xl overflow-hidden aspect-square group shadow-lg">
+              <Image
+                src="/realfruits.jpg"
+                alt="Real freeze-dried fruits"
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-4">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <TrendingUp className="w-3.5 h-3.5 text-primary" />
+                  <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Our Mission</span>
                 </div>
-                <h4 className="font-outfit font-black text-lg text-foreground">Our Mission</h4>
+                <p className="text-white text-xs font-semibold leading-snug">
+                  Healthy food that&apos;s delicious &amp; convenient.
+                </p>
               </div>
-              <p className="text-sm text-foreground/75 leading-relaxed font-medium">
-                To deliver high-quality freeze-dried fruits and vegetables that help people make healthier food choices without compromising on taste, convenience, or quality.
-              </p>
             </div>
 
-            {/* Vision Card */}
-            <div className="story-box bg-white border border-primary/5 hover:border-primary/10 p-6 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center text-primary">
-                  <Eye className="w-5 h-5" />
-                </div>
-                <h4 className="font-outfit font-black text-lg text-foreground">Our Vision</h4>
+            {/* Top-right: realmango */}
+            <div className="story-box relative rounded-3xl overflow-hidden aspect-square group shadow-lg">
+              <Image
+                src="/realmango.jpg"
+                alt="Real mango product"
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-4">
+                <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-0.5">Farm Fresh</span>
+                <p className="text-white text-xs font-semibold leading-snug">
+                  Handpicked at peak ripeness.
+                </p>
               </div>
-              <p className="text-sm text-foreground/75 leading-relaxed font-medium">
-                To become a trusted Indian brand in freeze-dried nutrition by offering innovative, natural, and premium products that support healthier lifestyles across households, fitness communities, and food industries.
-              </p>
+            </div>
+
+            {/* Bottom-left: realkiwi */}
+            <div className="story-box relative rounded-3xl overflow-hidden aspect-square group shadow-lg">
+              <Image
+                src="/realkiwi.jpg"
+                alt="Real kiwi product"
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-4">
+                <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block mb-0.5">Pure Nutrition</span>
+                <p className="text-white text-xs font-semibold leading-snug">
+                  No preservatives. Zero additives.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom-right: realstrawberry */}
+            <div className="story-box relative rounded-3xl overflow-hidden aspect-square group shadow-lg">
+              <Image
+                src="/realstrawberry.jpg"
+                alt="Real strawberry product"
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-4">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Eye className="w-3.5 h-3.5 text-rose-300" />
+                  <span className="text-[10px] font-bold text-rose-300 uppercase tracking-wider">Our Vision</span>
+                </div>
+                <p className="text-white text-xs font-semibold leading-snug">
+                  India&apos;s most trusted freeze-dried brand.
+                </p>
+              </div>
             </div>
 
           </div>
@@ -130,7 +183,7 @@ export default function About() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full">
-            
+
             <div className="bg-primary-light/10 border border-primary/5 hover:border-primary/15 hover:bg-primary-light/20 p-6 rounded-3xl transition-all duration-300 text-center flex flex-col items-center group">
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm mb-4 font-black group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 01

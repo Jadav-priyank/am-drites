@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import QuickViewModal from "../components/QuickViewModal";
 import CartDrawer from "../components/CartDrawer";
 import AuthModal from "../components/AuthModal";
+import ProfileModal from "../components/ProfileModal";
 import { Sparkles } from "lucide-react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -32,7 +33,9 @@ const PRODUCTS = [
     ingredients: "100% Alphonso Mango",
     nutrition: { calories: "180 kcal", carbs: "42g", sugar: "36g (Natural)", protein: "1.5g", fat: "0g" },
     tag: "Best Seller",
-    bgGradient: "from-amber-100 to-orange-100"
+    bgGradient: "from-amber-100 to-orange-100",
+    imageFront: "/mangoSliceFront.png",
+    imageBack: "/mangoSliceBack.png"
   },
   {
     id: "slices-strawberry",
@@ -46,7 +49,9 @@ const PRODUCTS = [
     ingredients: "100% Fresh Strawberries",
     nutrition: { calories: "140 kcal", carbs: "32g", sugar: "24g (Natural)", protein: "2.8g", fat: "0.4g" },
     tag: "100% Natural",
-    bgGradient: "from-rose-50 to-red-100"
+    bgGradient: "from-rose-50 to-red-100",
+    imageFront: "/strawberrySliceFront.jpg",
+    imageBack: "/strawberrySliceBack.jpg"
   },
   {
     id: "slices-banana",
@@ -60,7 +65,9 @@ const PRODUCTS = [
     ingredients: "100% Premium Bananas",
     nutrition: { calories: "220 kcal", carbs: "53g", sugar: "29g (Natural)", protein: "2.5g", fat: "0.2g" },
     tag: "Kids Favorite",
-    bgGradient: "from-yellow-50 to-amber-100"
+    bgGradient: "from-yellow-50 to-amber-100",
+    imageFront: "/bananaSliceFront.jpg",
+    imageBack: "/bananaSliceBack.jpg"
   },
   {
     id: "slices-apple",
@@ -74,7 +81,9 @@ const PRODUCTS = [
     ingredients: "100% Red Delicious Apples",
     nutrition: { calories: "175 kcal", carbs: "44g", sugar: "32g (Natural)", protein: "0.8g", fat: "0.2g" },
     tag: "Fiber Rich",
-    bgGradient: "from-red-50 to-orange-50"
+    bgGradient: "from-red-50 to-orange-50",
+    imageFront: "/appleSliceFront.jpg",
+    imageBack: "/appleSliceBack.png"
   },
   {
     id: "slices-kiwi",
@@ -88,7 +97,9 @@ const PRODUCTS = [
     ingredients: "100% Organic Kiwi",
     nutrition: { calories: "150 kcal", carbs: "35g", sugar: "26g (Natural)", protein: "2.1g", fat: "0.8g" },
     tag: "Vit C Rich",
-    bgGradient: "from-emerald-50 to-green-100"
+    bgGradient: "from-emerald-50 to-green-100",
+    imageFront: "/kiwiSliceFront.jpg",
+    imageBack: "/kiwiSliceBack.jpg"
   },
   {
     id: "slices-pineapple",
@@ -102,7 +113,9 @@ const PRODUCTS = [
     ingredients: "100% Smooth Cayenne Pineapple",
     nutrition: { calories: "165 kcal", carbs: "40g", sugar: "31g (Natural)", protein: "1.2g", fat: "0.1g" },
     tag: "Digestive Aid",
-    bgGradient: "from-yellow-100 to-yellow-50"
+    bgGradient: "from-yellow-100 to-yellow-50",
+    imageFront: "/pineappleSliceFrozenFront.jpg",
+    imageBack: "/pineappleSliceBack.jpg"
   },
 
   // FRUIT POWDERS
@@ -118,7 +131,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Mango",
     nutrition: { calories: "360 kcal", carbs: "84g", sugar: "72g (Natural)", protein: "3g", fat: "0g" },
     tag: "Baking Essential",
-    bgGradient: "from-amber-100 to-yellow-100"
+    bgGradient: "from-amber-100 to-yellow-100",
+    imageFront: "/mangoPowderFront.jpg",
+    imageBack: "/mangoPowderBack.jpg"
   },
   {
     id: "powder-strawberry",
@@ -132,7 +147,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Strawberries",
     nutrition: { calories: "280 kcal", carbs: "64g", sugar: "48g (Natural)", protein: "5.6g", fat: "0.8g" },
     tag: "Superfood",
-    bgGradient: "from-rose-100 to-pink-50"
+    bgGradient: "from-rose-100 to-pink-50",
+    imageFront: "/strawberryPowderFront.jpg",
+    imageBack: null
   },
   {
     id: "powder-banana",
@@ -146,7 +163,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Banana",
     nutrition: { calories: "440 kcal", carbs: "106g", sugar: "58g (Natural)", protein: "5g", fat: "0.4g" },
     tag: "Fitness Favorite",
-    bgGradient: "from-yellow-100 to-amber-50"
+    bgGradient: "from-yellow-100 to-amber-50",
+    imageFront: "/bananaPowderFront.jpg",
+    imageBack: "/bananaPowderBack.jpg"
   },
   {
     id: "powder-apple",
@@ -160,7 +179,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Apples",
     nutrition: { calories: "350 kcal", carbs: "88g", sugar: "64g (Natural)", protein: "1.6g", fat: "0.4g" },
     tag: "All-Natural Sweetener",
-    bgGradient: "from-red-100 to-orange-50"
+    bgGradient: "from-red-100 to-orange-50",
+    imageFront: "/applePowderFront.jpg",
+    imageBack: "/applePowderBack.jpg"
   },
   {
     id: "powder-kiwi",
@@ -174,7 +195,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Kiwi",
     nutrition: { calories: "300 kcal", carbs: "70g", sugar: "52g (Natural)", protein: "4.2g", fat: "1.6g" },
     tag: "Color Booster",
-    bgGradient: "from-green-100 to-emerald-50"
+    bgGradient: "from-green-100 to-emerald-50",
+    imageFront: "/kiwiPowderFront.jpg",
+    imageBack: null
   },
   {
     id: "powder-pineapple",
@@ -188,7 +211,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Pineapple",
     nutrition: { calories: "330 kcal", carbs: "80g", sugar: "62g (Natural)", protein: "2.4g", fat: "0.2g" },
     tag: "Tropical Flavor",
-    bgGradient: "from-yellow-50 to-orange-100"
+    bgGradient: "from-yellow-50 to-orange-100",
+    imageFront: "/pineapplePowderFront.jpg",
+    imageBack: "/pineapplePowderBack.jpg"
   },
 
   // VEGETABLE POWDERS
@@ -204,7 +229,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Beetroot",
     nutrition: { calories: "340 kcal", carbs: "72g", sugar: "54g (Natural)", protein: "12g", fat: "0.5g" },
     tag: "Pre-Workout Boost",
-    bgGradient: "from-rose-100 to-purple-100"
+    bgGradient: "from-rose-100 to-purple-100",
+    imageFront: "/beetrootPowderFront.jpg",
+    imageBack: null
   },
   {
     id: "powder-tomato",
@@ -218,7 +245,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Tomato",
     nutrition: { calories: "302 kcal", carbs: "58g", sugar: "34g (Natural)", protein: "14g", fat: "1.5g" },
     tag: "Umami Rich",
-    bgGradient: "from-red-100 to-orange-100"
+    bgGradient: "from-red-100 to-orange-100",
+    imageFront: "/tomatoPowderFront.jpg",
+    imageBack: null
   },
   {
     id: "powder-onion",
@@ -232,7 +261,9 @@ const PRODUCTS = [
     ingredients: "100% Freeze-Dried Onion",
     nutrition: { calories: "347 kcal", carbs: "80g", sugar: "26g (Natural)", protein: "10g", fat: "0.8g" },
     tag: "Kitchen Essential",
-    bgGradient: "from-amber-50 to-stone-100"
+    bgGradient: "from-amber-50 to-stone-100",
+    imageFront: "/onionPowderFront.jpg",
+    imageBack: null
   }
 ];
 
@@ -247,6 +278,9 @@ export default function Home() {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [profileModalTab, setProfileModalTab] = useState("addresses");
+  const [products, setProducts] = useState(PRODUCTS);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -261,44 +295,81 @@ export default function Home() {
         console.error(err);
       }
     };
+    
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        if (data.success && data.products) {
+          setProducts(data.products);
+        }
+      } catch (err) {
+        console.error("Failed to load products from database, falling back to local list:", err);
+      }
+    };
+
     checkSession();
+    fetchProducts();
+  }, []);
+
+  // Load cart on initial mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem("am_driets_cart");
+    if (storedCart) {
+      try {
+        setCart(JSON.parse(storedCart));
+      } catch (e) {
+        console.error("Failed to parse stored cart:", e);
+      }
+    }
   }, []);
 
   // Add Item to Cart
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
       const existing = prevCart.find((item) => item.id === product.id);
+      let updatedCart;
       if (existing) {
-        return prevCart.map((item) => 
+        updatedCart = prevCart.map((item) => 
           item.id === product.id 
             ? { ...item, quantity: item.quantity + quantity } 
             : item
         );
+      } else {
+        updatedCart = [...prevCart, { ...product, quantity }];
       }
-      return [...prevCart, { ...product, quantity }];
+      localStorage.setItem("am_driets_cart", JSON.stringify(updatedCart));
+      return updatedCart;
     });
     setCartOpen(true);
   };
 
   // Remove Item / Update quantity
   const updateQuantity = (id, delta) => {
-    setCart((prevCart) => 
-      prevCart.map((item) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) => {
         if (item.id === id) {
           const newQty = item.quantity + delta;
           return newQty > 0 ? { ...item, quantity: newQty } : null;
         }
         return item;
-      }).filter(Boolean)
-    );
+      }).filter(Boolean);
+      localStorage.setItem("am_driets_cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
 
   const removeFromCart = (id) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+    setCart((prevCart) => {
+      const updatedCart = prevCart.filter((item) => item.id !== id);
+      localStorage.setItem("am_driets_cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
 
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem("am_driets_cart");
   };
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -316,10 +387,10 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col font-sans select-none antialiased">
       {/* ----------------- TOP PROMO BAR ----------------- */}
-      <div className="bg-primary text-white text-xs font-semibold py-2 px-4 text-center z-40 relative flex items-center justify-center gap-2">
+      {/* <div className="bg-primary text-white text-xs font-semibold py-2 px-4 text-center z-40 relative flex items-center justify-center gap-2">
         <Sparkles className="w-3.5 h-3.5" />
         <span>100% Natural Freeze-Dried Nutrition • Free Delivery in India on orders over ₹499!</span>
-      </div>
+      </div> */}
 
       <Header 
         cartItemCount={cartItemCount}
@@ -338,6 +409,8 @@ export default function Home() {
           setUser(null);
           setIsLoggedIn(false);
         }}
+        setProfileModalOpen={setProfileModalOpen}
+        setProfileModalTab={setProfileModalTab}
       />
 
       <Hero scrollTo={scrollTo} />
@@ -345,7 +418,7 @@ export default function Home() {
       <Features />
 
       <Products 
-        products={PRODUCTS}
+        products={products}
         activeCategory={activeCategory}
         setActiveCategory={setActiveCategory}
         searchQuery={searchQuery}
@@ -389,6 +462,14 @@ export default function Home() {
           setUser(u);
           setIsLoggedIn(true);
         }} 
+      />
+
+      <ProfileModal 
+        isOpen={profileModalOpen}
+        setIsOpen={setProfileModalOpen}
+        user={user}
+        onUpdateUser={setUser}
+        initialTab={profileModalTab}
       />
     </div>
   );

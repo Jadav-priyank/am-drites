@@ -22,8 +22,20 @@ const OrderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Completed', 'Cancelled'],
-    default: 'Completed',
+    enum: ['Pending', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Completed', 'Cancelled'],
+    default: 'Pending',
+  },
+  courierPartner: {
+    type: String,
+    default: "",
+  },
+  trackingNumber: {
+    type: String,
+    default: "",
+  },
+  trackingUrl: {
+    type: String,
+    default: "",
   },
   paymentMethod: {
     type: String,
@@ -34,6 +46,15 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     enum: ['Pending', 'Paid'],
     default: 'Pending',
+  },
+  shippingAddress: {
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    addressLine1: { type: String, required: true },
+    addressLine2: { type: String },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pinCode: { type: String, required: true }
   },
   createdAt: {
     type: Date,

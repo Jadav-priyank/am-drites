@@ -20,13 +20,13 @@ export async function POST(request) {
       razorpay_signature,
       items,
       totalAmount,
-      paymentMethod
+      paymentMethod,
+      shippingAddress
     } = await request.json();
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return NextResponse.json({ error: 'Missing required payment fields' }, { status: 400 });
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !shippingAddress) {
+      return NextResponse.json({ error: 'Missing required payment/shipping fields' }, { status: 400 });
     }
-    
     
     const secret = process.env.RAZORPAY_KEY_SECRET || 'placeholder';
     
@@ -47,9 +47,10 @@ export async function POST(request) {
       user: decoded.userId,
       items,
       totalAmount,
-      status: 'Completed',
+      status: 'Processing',
       paymentMethod,
-      paymentStatus: 'Paid'
+      paymentStatus: 'Paid',
+      shippingAddress
     });
     
     return NextResponse.json({ success: true, order }, { status: 201 });

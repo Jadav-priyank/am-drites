@@ -208,13 +208,11 @@ export default function ThreeHeroAnimation() {
       const planeHeight = size;
 
       const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
-      const material = new THREE.MeshStandardMaterial({
+      const material = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
         alphaTest: 0.15,
         side: THREE.DoubleSide,
-        roughness: 0.4,
-        metalness: 0.0,
         depthWrite: false,
       });
 
@@ -320,8 +318,8 @@ export default function ThreeHeroAnimation() {
         mesh.position.y =
           mesh.userData.startY +
           Math.sin(elapsedTime * mesh.userData.floatSpeed * 50) *
-            mesh.userData.floatRange *
-            0.25;
+          mesh.userData.floatRange *
+          0.25;
       });
 
       // Mouse Parallax Lerps
@@ -337,8 +335,8 @@ export default function ThreeHeroAnimation() {
           mesh.position.y =
             mesh.userData.startY +
             Math.sin(elapsedTime * mesh.userData.floatSpeed * 50) *
-              mesh.userData.floatRange *
-              0.25;
+            mesh.userData.floatRange *
+            0.25;
           if (mesh.userData.rotSpeedZ) {
             mesh.rotation.z += mesh.userData.rotSpeedZ;
           }

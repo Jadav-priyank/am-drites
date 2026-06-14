@@ -18,7 +18,9 @@ export default function Header({
   isLoggedIn,
   user,
   setAuthModalOpen,
-  handleLogout
+  handleLogout,
+  setProfileModalOpen,
+  setProfileModalTab
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerRef = useRef(null);
@@ -61,6 +63,7 @@ export default function Header({
             src="/logo.jpeg" 
             alt="AM DRIETS Logo" 
             fill 
+            sizes="(max-width: 768px) 128px, 144px"
             className="object-contain object-left transform group-hover:scale-105 transition-transform duration-300"
             priority
           />
@@ -128,9 +131,21 @@ export default function Header({
               <button className="p-2.5 rounded-full bg-primary-light/50 text-primary transition-colors flex items-center justify-center font-bold text-xs w-10 h-10 uppercase border border-primary/20">
                 {user?.name?.charAt(0) || <User className="w-5 h-5" />}
               </button>
-              <div className="absolute top-full right-0 mt-2 w-32 bg-white rounded-xl shadow-xl border border-primary/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 flex flex-col">
-                <p className="text-xs font-bold text-foreground px-3 py-2 border-b border-primary/5 mb-1 truncate">{user?.name}</p>
-                <button onClick={handleLogout} className="text-xs text-left px-3 py-2 text-foreground/60 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+              <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-xl border border-primary/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 flex flex-col gap-0.5">
+                <p className="text-xs font-bold text-foreground px-3 py-2 border-b border-primary/5 mb-1 truncate leading-none">{user?.name}</p>
+                <button
+                  onClick={() => { setProfileModalTab("addresses"); setProfileModalOpen(true); }}
+                  className="text-xs text-left px-3 py-2 text-foreground/60 hover:text-primary hover:bg-primary-light/5 rounded-lg transition-colors font-semibold"
+                >
+                  My Profile
+                </button>
+                <button
+                  onClick={() => { setProfileModalTab("orders"); setProfileModalOpen(true); }}
+                  className="text-xs text-left px-3 py-2 text-foreground/60 hover:text-primary hover:bg-primary-light/5 rounded-lg transition-colors font-semibold"
+                >
+                  My Orders
+                </button>
+                <button onClick={handleLogout} className="text-xs text-left px-3 py-2 text-foreground/60 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors font-semibold">
                   Logout
                 </button>
               </div>
@@ -189,9 +204,23 @@ export default function Header({
           
           {/* Auth in Mobile Menu */}
           {isLoggedIn ? (
-            <div className="mobile-link flex flex-col gap-2 border-t border-primary/10 pt-4 mt-2">
-              <span className="text-sm font-semibold text-foreground/60">Signed in as {user?.name}</span>
-              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-left text-lg font-bold text-red-500 hover:text-red-600 py-2">Logout</button>
+            <div className="mobile-link flex flex-col gap-1 border-t border-primary/10 pt-4 mt-2 font-semibold">
+              <span className="text-xs font-bold text-foreground/40 uppercase tracking-wider mb-2">My Account</span>
+              <button
+                onClick={() => { setProfileModalTab("addresses"); setProfileModalOpen(true); setMobileMenuOpen(false); }}
+                className="text-left text-lg font-bold hover:text-primary py-2"
+              >
+                My Profile
+              </button>
+              <button
+                onClick={() => { setProfileModalTab("orders"); setProfileModalOpen(true); setMobileMenuOpen(false); }}
+                className="text-left text-lg font-bold hover:text-primary py-2"
+              >
+                My Orders
+              </button>
+              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-left text-lg font-bold text-red-500 hover:text-red-600 py-2">
+                Logout
+              </button>
             </div>
           ) : (
             <button onClick={() => { setAuthModalOpen(true); setMobileMenuOpen(false); }} className="mobile-link text-left text-lg font-bold hover:text-primary py-2 border-t border-primary/10 pt-4 mt-2">Login / Sign Up</button>

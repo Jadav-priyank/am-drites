@@ -1,9 +1,16 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { X, Leaf } from "lucide-react";
 
 export default function QuickViewModal({ product, onClose, onAddToCart }) {
+  const [showBack, setShowBack] = useState(false);
+
+  useEffect(() => {
+    setShowBack(false);
+  }, [product]);
+
   if (!product) return null;
 
   return (
@@ -33,12 +40,48 @@ export default function QuickViewModal({ product, onClose, onAddToCart }) {
 
           <div className="relative w-4/5 h-[180px] md:h-[220px] hover:scale-105 transition-transform duration-300">
             <Image 
-              src={product.category === "slices" ? "/bowl_freeze_dried.png" : "/hero_pouch_mockup.png"} 
+              src={product.imageFront || "/hero_pouch_mockup.png"} 
               alt={product.name}
               fill
-              className="object-contain"
+              sizes="(max-width: 768px) 200px, 300px"
+              className={`object-contain transition-opacity duration-300 ${showBack ? "opacity-0" : "opacity-100"}`}
             />
+            {product.imageBack && (
+              <Image 
+                src={product.imageBack} 
+                alt={`${product.name} Back`}
+                fill
+                sizes="(max-width: 768px) 200px, 300px"
+                className={`object-contain absolute inset-0 transition-opacity duration-300 ${showBack ? "opacity-100" : "opacity-0"}`}
+              />
+            )}
           </div>
+
+          {/* Front / Back Toggle Pills */}
+          {product.imageBack && (
+            <div className="absolute bottom-6 flex bg-white/80 backdrop-blur-xs p-1 rounded-full border border-primary/10 shadow-sm gap-1 z-10">
+              <button
+                onClick={() => setShowBack(false)}
+                className={`px-3 py-1 text-[10px] font-extrabold rounded-full transition-all duration-200 ${
+                  !showBack
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-foreground/60 hover:text-primary hover:bg-white/40"
+                }`}
+              >
+                FRONT
+              </button>
+              <button
+                onClick={() => setShowBack(true)}
+                className={`px-3 py-1 text-[10px] font-extrabold rounded-full transition-all duration-200 ${
+                  showBack
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-foreground/60 hover:text-primary hover:bg-white/40"
+                }`}
+              >
+                BACK
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Right Col: Product Details */}

@@ -137,11 +137,23 @@ export default function Products({
                 {/* representation utilizing our generated mockups */}
                 <div className="relative w-3/5 h-4/5 transform group-hover:scale-110 group-hover:rotate-2 transition-transform duration-500">
                   <Image 
-                    src={product.category === "slices" ? "/bowl_freeze_dried.png" : "/hero_pouch_mockup.png"} 
+                    src={product.imageFront || "/hero_pouch_mockup.png"} 
                     alt={product.name}
                     fill
-                    className="object-contain"
+                    sizes="(max-width: 768px) 50vw, 300px"
+                    className={`object-contain transition-opacity duration-500 ease-in-out ${
+                      product.imageBack ? "group-hover:opacity-0" : ""
+                    }`}
                   />
+                  {product.imageBack && (
+                    <Image 
+                      src={product.imageBack} 
+                      alt={`${product.name} Back`}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 300px"
+                      className="object-contain absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                    />
+                  )}
                 </div>
               </div>
 

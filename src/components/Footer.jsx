@@ -1,9 +1,38 @@
 "use client";
 
-import { Leaf } from "lucide-react";
+import { useState } from "react";
+import { Leaf, Check } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer({ scrollTo, setActiveCategory }) {
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState(""); // "" | "loading" | "success" | "error"
+  const [newsletterMsg, setNewsletterMsg] = useState("");
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    setNewsletterStatus("loading");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setNewsletterStatus("success");
+        setNewsletterMsg(data.message || "Successfully subscribed!");
+        setNewsletterEmail("");
+      } else {
+        setNewsletterStatus("error");
+        setNewsletterMsg(data.error || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      setNewsletterStatus("error");
+      setNewsletterMsg("Connection error. Please try again.");
+    }
+  };
   return (
     <div>
       {/* ----------------- WHY CUSTOMERS CHOOSE US ----------------- */}
@@ -91,6 +120,7 @@ export default function Footer({ scrollTo, setActiveCategory }) {
                 src="/logo.jpeg" 
                 alt="AM DRIETS Logo" 
                 fill 
+                sizes="64px"
                 className="object-contain p-1.5" 
               />
             </div>
@@ -125,20 +155,35 @@ export default function Footer({ scrollTo, setActiveCategory }) {
           <div>
             <h5 className="font-outfit font-bold text-base text-white uppercase tracking-wider mb-6">Newsletter Signup</h5>
             <p className="text-sm text-white/60 leading-relaxed mb-4">Subscribe to receive exclusive discounts, recipes, and wellness updates.</p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
-                className="w-full text-xs px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-primary text-white"
-                required
-              />
-              <button 
-                type="submit"
-                className="bg-primary hover:bg-primary-hover text-white text-xs font-bold px-4 py-3 rounded-xl transition-colors"
-              >
-                Join
-              </button>
-            </form>
+            {newsletterStatus === "success" ? (
+              <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold px-4 py-3 rounded-xl">
+                <Check className="w-4 h-4 shrink-0" />
+                <span>{newsletterMsg}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    className="w-full text-xs px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-primary text-white"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    disabled={newsletterStatus === "loading"}
+                    className="bg-primary hover:bg-primary-hover text-white text-xs font-bold px-4 py-3 rounded-xl transition-colors disabled:opacity-60 whitespace-nowrap"
+                  >
+                    {newsletterStatus === "loading" ? "..." : "Join"}
+                  </button>
+                </div>
+                {newsletterStatus === "error" && (
+                  <p className="text-xs text-red-400 font-semibold px-1">{newsletterMsg}</p>
+                )}
+              </form>
+            )}
           </div>
 
         </div>
