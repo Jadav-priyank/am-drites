@@ -65,6 +65,12 @@ export default function CheckoutPage() {
   const [authFormData, setAuthFormData] = useState({ name: "", email: "", password: "" });
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [authInfo, setAuthInfo] = useState("");
+  // OTP signup step for checkout inline auth
+  const [checkoutSignupStep, setCheckoutSignupStep] = useState("form"); // "form" | "otp"
+  const [checkoutOtp, setCheckoutOtp] = useState("");
+  const [otpTimer, setOtpTimer] = useState(0);
+  const otpTimerRef = useState(null);
 
   // Order Details
   const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" | "ONLINE"
@@ -158,64 +164,114 @@ export default function CheckoutPage() {
     setAuthError("");
   };
 
-  const handleAuthSubmit = async (e) => {
+  // Start OTP resend countdown
+  const startOtpTimer = (secs = 60) => {
+    setOtpTimer(secs);
+    if (otpTimerRef[0]) clearInterval(otpTimerRef[0]);
+    otpTimerRef[0] = setInterval(() => {
+      setOtpTimer(t => { if (t <= 1) { clearInterval(otpTimerRef[0]); return 0; } return t - 1; });
+    }, 1000);
+  };
+
+  // Login submit
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setAuthLoading(true);
-    setAuthError("");
-
+    setAuthLoading(true); setAuthError("");
     try {
-      const endpoint = authMode === "login" ? "/api/auth/login" : "/api/auth/signup";
-      const payload = authMode === "login" 
-        ? { email: authFormData.email, password: authFormData.password }
-        : authFormData;
-
-      const res = await fetch(endpoint, {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ email: authFormData.email, password: authFormData.password }),
       });
-
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
+      await afterAuthSuccess();
+      toast.success("Welcome back!");
+    } catch (err) {
+      setAuthError(err.message); toast.error(err.message);
+    } finally { setAuthLoading(false); }
+  };
 
-      if (!res.ok) {
-        throw new Error(data.error || "Authentication failed");
-      }
-
-      // Login success, fetch full session with addresses
-      const meRes = await fetch("/api/auth/me");
-      const meData = await meRes.json();
-      if (meData.user) {
-        setUser(meData.user);
-        setIsLoggedIn(true);
-        fetchAvailableCoupons();
-        const addresses = meData.user.addresses || [];
-        const defaultAddr = addresses.find(a => a.isDefault) || addresses[0];
-        if (defaultAddr) {
-          setSelectedAddressId(defaultAddr._id);
-          setShippingAddress({
-            name: defaultAddr.name || "",
-            phone: defaultAddr.phone || "",
-            addressLine1: defaultAddr.addressLine1 || "",
-            addressLine2: defaultAddr.addressLine2 || "",
-            city: defaultAddr.city || "",
-            state: defaultAddr.state || "",
-            pinCode: defaultAddr.pinCode || ""
-          });
-        } else {
-          setSelectedAddressId("new");
-          setShippingAddress(prev => ({
-            ...prev,
-            name: meData.user.name || prev.name
-          }));
-        }
-      }
-      toast.success(authMode === "login" ? "Welcome back!" : "Account created successfully!");
+  // Signup Step 1: send OTP
+  const handleSendOtpCheckout = async (e) => {
+    e.preventDefault();
+    setAuthLoading(true); setAuthError(""); setAuthInfo("");
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(authFormData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+      setCheckoutSignupStep("otp");
+      setCheckoutOtp("");
+      setAuthInfo(`Verification code sent to ${authFormData.email}`);
+      startOtpTimer(60);
     } catch (err) {
       setAuthError(err.message);
-      toast.error(err.message);
-    } finally {
-      setAuthLoading(false);
+    } finally { setAuthLoading(false); }
+  };
+
+  // Signup Step 2: verify OTP
+  const handleVerifyOtpCheckout = async (otpVal) => {
+    const code = (otpVal || checkoutOtp).trim();
+    if (code.length < 6) { setAuthError("Enter the complete 6-digit code."); return; }
+    setAuthLoading(true); setAuthError("");
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: authFormData.email, otp: code }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Verification failed");
+      await afterAuthSuccess();
+      toast.success("Account created successfully!");
+    } catch (err) {
+      setAuthError(err.message);
+    } finally { setAuthLoading(false); }
+  };
+
+  // Resend OTP
+  const handleResendOtpCheckout = async () => {
+    if (otpTimer > 0) return;
+    setAuthLoading(true); setAuthError(""); setAuthInfo("");
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(authFormData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to resend");
+      setCheckoutOtp(""); setAuthInfo("New code sent."); startOtpTimer(60);
+    } catch (err) { setAuthError(err.message); }
+    finally { setAuthLoading(false); }
+  };
+
+  // Common post-auth session refresh
+  const afterAuthSuccess = async () => {
+    const meRes = await fetch("/api/auth/me");
+    const meData = await meRes.json();
+    if (meData.user) {
+      setUser(meData.user); setIsLoggedIn(true); fetchAvailableCoupons();
+      const addresses = meData.user.addresses || [];
+      const defaultAddr = addresses.find(a => a.isDefault) || addresses[0];
+      if (defaultAddr) {
+        setSelectedAddressId(defaultAddr._id);
+        setShippingAddress({ name: defaultAddr.name || "", phone: defaultAddr.phone || "", addressLine1: defaultAddr.addressLine1 || "", addressLine2: defaultAddr.addressLine2 || "", city: defaultAddr.city || "", state: defaultAddr.state || "", pinCode: defaultAddr.pinCode || "" });
+      } else {
+        setSelectedAddressId("new");
+        setShippingAddress(prev => ({ ...prev, name: meData.user.name || prev.name }));
+      }
     }
+  };
+
+  // Legacy handler kept for compatibility (not used for signup anymore)
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    if (authMode === "login") return handleLoginSubmit(e);
+    return handleSendOtpCheckout(e);
   };
 
   const handleAddressChange = (e) => {
@@ -624,76 +680,115 @@ export default function CheckoutPage() {
               </div>
 
               <div className="p-6 md:p-8">
-                <div className="mb-6">
-                  <h3 className="font-outfit font-black text-xl text-foreground">
-                    {authMode === "login" ? "Sign In to Checkout" : "Create Account First"}
-                  </h3>
-                  <p className="text-xs text-foreground/50 mt-1 leading-relaxed">
-                    {authMode === "login" 
-                      ? "Keep track of your order, delivery milestones, and earn reward points on your purchase." 
-                      : "Quickly sign up in seconds to secure your order and make future purchases instant."}
-                  </p>
-                </div>
 
-                {authError && (
-                  <div className="mb-5 p-3 bg-red-50 border border-red-100 rounded-xl text-red-500 text-xs font-semibold text-center flex items-center justify-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{authError}</span>
-                  </div>
+                {/* ── LOGIN form ─────────────────────────────────────────── */}
+                {authMode === "login" && (
+                  <>
+                    <div className="mb-6">
+                      <h3 className="font-outfit font-black text-xl text-foreground">Sign In to Checkout</h3>
+                      <p className="text-xs text-foreground/50 mt-1 leading-relaxed">Keep track of your order and delivery milestones.</p>
+                    </div>
+                    {authError && (
+                      <div className="mb-5 p-3 bg-red-50 border border-red-100 rounded-xl text-red-500 text-xs font-semibold text-center flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" /><span>{authError}</span>
+                      </div>
+                    )}
+                    <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
+                      <input type="email" name="email" placeholder="Email Address" value={authFormData.email} onChange={handleAuthChange} required className="w-full px-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all" />
+                      <input type="password" name="password" placeholder="Password" value={authFormData.password} onChange={handleAuthChange} required minLength={6} className="w-full px-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all" />
+                      <button type="submit" disabled={authLoading} className="mt-2 w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed">
+                        {authLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In & Continue"}
+                      </button>
+                    </form>
+                  </>
                 )}
 
-                <form onSubmit={handleAuthSubmit} className="flex flex-col gap-4">
-                  {authMode === "signup" && (
-                    <div className="relative">
-                      <input 
-                        type="text" 
-                        name="name"
-                        placeholder="Full Name" 
-                        value={authFormData.name}
-                        onChange={handleAuthChange}
-                        required
-                        className="w-full pl-4 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all"
-                      />
+                {/* ── SIGNUP Step 1: form ─────────────────────────────────── */}
+                {authMode === "signup" && checkoutSignupStep === "form" && (
+                  <>
+                    <div className="mb-6">
+                      <h3 className="font-outfit font-black text-xl text-foreground">Create Account First</h3>
+                      <p className="text-xs text-foreground/50 mt-1 leading-relaxed">Sign up in seconds — we&apos;ll verify your email with a quick OTP.</p>
                     </div>
-                  )}
-
-                  <div className="relative">
-                    <input 
-                      type="email" 
-                      name="email"
-                      placeholder="Email Address" 
-                      value={authFormData.email}
-                      onChange={handleAuthChange}
-                      required
-                      className="w-full pl-4 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all"
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <input 
-                      type="password" 
-                      name="password"
-                      placeholder="Password" 
-                      value={authFormData.password}
-                      onChange={handleAuthChange}
-                      required
-                      minLength={6}
-                      className="w-full pl-4 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all"
-                    />
-                  </div>
-
-                  <button 
-                    type="submit" 
-                    disabled={authLoading}
-                    className="mt-2 w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all text-sm flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed"
-                  >
-                    {authLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      authMode === "login" ? "Sign In & Continue" : "Create Account & Continue"
+                    {authError && (
+                      <div className="mb-5 p-3 bg-red-50 border border-red-100 rounded-xl text-red-500 text-xs font-semibold text-center flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" /><span>{authError}</span>
+                      </div>
                     )}
-                  </button>
-                </form>
+                    <form onSubmit={handleSendOtpCheckout} className="flex flex-col gap-4">
+                      <input type="text" name="name" placeholder="Full Name" value={authFormData.name} onChange={handleAuthChange} required className="w-full px-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all" />
+                      <input type="email" name="email" placeholder="Email Address" value={authFormData.email} onChange={handleAuthChange} required className="w-full px-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all" />
+                      <input type="password" name="password" placeholder="Password (min 6 chars)" value={authFormData.password} onChange={handleAuthChange} required minLength={6} className="w-full px-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-sm font-semibold text-foreground transition-all" />
+                      <button type="submit" disabled={authLoading} className="mt-2 w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed">
+                        {authLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (<><ShieldCheck className="w-4 h-4" /> Send Verification Code</>)}
+                      </button>
+                    </form>
+                  </>
+                )}
+
+                {/* ── SIGNUP Step 2: OTP entry ────────────────────────────── */}
+                {authMode === "signup" && checkoutSignupStep === "otp" && (
+                  <>
+                    <button onClick={() => { setCheckoutSignupStep("form"); setAuthError(""); setAuthInfo(""); setCheckoutOtp(""); }} className="flex items-center gap-1 text-xs text-foreground/40 hover:text-primary mb-4 transition-colors">
+                      ← Back
+                    </button>
+                    <div className="mb-6 text-center">
+                      <div className="w-12 h-12 rounded-2xl bg-primary-light flex items-center justify-center text-primary mx-auto mb-3">
+                        <ShieldCheck className="w-6 h-6" />
+                      </div>
+                      <h3 className="font-outfit font-black text-xl text-foreground">Verify Your Email</h3>
+                      <p className="text-xs text-foreground/50 mt-1">Code sent to <strong className="text-foreground/70">{authFormData.email}</strong></p>
+                    </div>
+                    {authError && (
+                      <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-500 text-xs font-semibold text-center flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" /><span>{authError}</span>
+                      </div>
+                    )}
+                    {authInfo && !authError && (
+                      <div className="mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-600 text-xs font-semibold text-center">{authInfo}</div>
+                    )}
+                    <div className="flex gap-2 justify-center mb-5">
+                      {Array.from({ length: 6 }).map((_, idx) => (
+                        <input
+                          key={idx}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={checkoutOtp[idx] || ""}
+                          onChange={(e) => {
+                            const v = e.target.value.replace(/\D/g, "").slice(-1);
+                            const arr = checkoutOtp.split("");
+                            arr[idx] = v;
+                            const next = arr.join("").padEnd(6, "").slice(0, 6);
+                            setCheckoutOtp(next);
+                            setAuthError("");
+                            if (v && idx < 5) e.target.nextSibling?.focus();
+                            if (next.replace(/\s/g,"").length === 6) handleVerifyOtpCheckout(next);
+                          }}
+                          onKeyDown={(e) => { if (e.key === "Backspace" && !e.target.value && idx > 0) e.target.previousSibling?.focus(); }}
+                          onPaste={(e) => {
+                            const p = e.clipboardData.getData("text").replace(/\D/g,"").slice(0,6);
+                            if (p) { setCheckoutOtp(p.padEnd(6,"").slice(0,6)); if (p.length === 6) handleVerifyOtpCheckout(p); }
+                            e.preventDefault();
+                          }}
+                          className="w-10 h-11 text-center text-base font-black rounded-xl border-2 border-primary/20 bg-primary-light/5 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all text-foreground"
+                        />
+                      ))}
+                    </div>
+                    <button onClick={() => handleVerifyOtpCheckout()} disabled={authLoading} className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed">
+                      {authLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Verify & Create Account"}
+                    </button>
+                    <div className="text-center text-xs text-foreground/50 mt-3">
+                      Didn&apos;t receive it?{" "}
+                      {otpTimer > 0 ? (
+                        <span className="font-semibold text-foreground/40">Resend in {otpTimer}s</span>
+                      ) : (
+                        <button onClick={handleResendOtpCheckout} disabled={authLoading} className="text-primary font-semibold hover:underline disabled:opacity-50">Resend Code</button>
+                      )}
+                    </div>
+                  </>
+                )}
+
               </div>
             </div>
           ) : (

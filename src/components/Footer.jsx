@@ -1,7 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Leaf, Check } from "lucide-react";
+import { Leaf, Check, Mail } from "lucide-react";
+
+// Inline brand SVGs (Instagram & Facebook removed from lucide-react)
+const InstagramIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+  </svg>
+);
+
+const FacebookIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
 import Image from "next/image";
 
 export default function Footer({ scrollTo, setActiveCategory }) {
@@ -140,14 +155,47 @@ export default function Footer({ scrollTo, setActiveCategory }) {
             </ul>
           </div>
 
-          {/* Footer Links - Support */}
+          {/* Footer Links - Contact */}
           <div>
-            <h5 className="font-outfit font-bold text-base text-white uppercase tracking-wider mb-6">Quick Links</h5>
-            <ul className="flex flex-col gap-3.5 text-sm text-white/60">
-              <li><button onClick={() => scrollTo("story")} className="hover:text-primary transition-colors text-left">About Our Story</button></li>
-              <li><button onClick={() => scrollTo("quality")} className="hover:text-primary transition-colors text-left">Our Quality Standards</button></li>
-              <li><button onClick={() => scrollTo("recipes")} className="hover:text-primary transition-colors text-left">Recipes & Usage</button></li>
-              <li><a href="#" className="hover:text-primary transition-colors text-left">Contact Support</a></li>
+            <h5 className="font-outfit font-bold text-base text-white uppercase tracking-wider mb-6">Contact Us</h5>
+            <ul className="flex flex-col gap-4 text-sm text-white/60">
+              <li>
+                <a
+                  href="mailto:info@amdriets.com"
+                  className="flex items-center gap-2.5 hover:text-primary transition-colors group"
+                >
+                  <span className="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-primary/20 flex items-center justify-center shrink-0 transition-colors">
+                    <Mail className="w-3.5 h-3.5" />
+                  </span>
+                  info@amdriets.com
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/amdriets"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 hover:text-primary transition-colors group"
+                >
+                  <span className="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-pink-500/20 flex items-center justify-center shrink-0 transition-colors">
+                    <InstagramIcon className="w-3.5 h-3.5" />
+                  </span>
+                  @amdriets
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/share/1BTvLB7Lek/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 hover:text-primary transition-colors group"
+                >
+                  <span className="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-blue-500/20 flex items-center justify-center shrink-0 transition-colors">
+                    <FacebookIcon className="w-3.5 h-3.5" />
+                  </span>
+                  AM DRIETS
+                </a>
+              </li>
             </ul>
           </div>
 
