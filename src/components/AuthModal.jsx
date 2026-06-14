@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Mail, Lock, User, Loader2, ShieldCheck, RefreshCw, ArrowLeft } from "lucide-react";
+import {
+  X, Mail, Lock, User, Loader2, ShieldCheck,
+  RefreshCw, ArrowLeft, KeyRound, CheckCircle2,
+} from "lucide-react";
 
 // ─── OTP Input ────────────────────────────────────────────────────────────────
 function OtpInput({ value, onChange }) {
@@ -56,9 +59,16 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
   // Signup steps: 'form' | 'otp'
   const [signupStep, setSignupStep] = useState("form");
 
+  // Forgot-password steps: 'email' | 'otp' | 'newpass' | 'done'
+  const [fpStep, setFpStep]   = useState("email");
+  const [fpEmail, setFpEmail] = useState("");
+  const [fpOtp, setFpOtp]     = useState("");
+  const [fpPass, setFpPass]   = useState("");
+  const [fpPassConfirm, setFpPassConfirm] = useState("");
+
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [otp, setOtp]           = useState("");
-  const [otpTimer, setOtpTimer] = useState(0); // seconds until resend allowed
+  const [otpTimer, setOtpTimer] = useState(0);
   const timerRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
@@ -83,6 +93,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
   const switchTab = (tab) => {
     setActiveTab(tab);
     setSignupStep("form");
+    setFpStep("email"); setFpEmail(""); setFpOtp(""); setFpPass(""); setFpPassConfirm("");
     setError(""); setInfo("");
     setOtp(""); setFormData({ name: "", email: "", password: "" });
     clearInterval(timerRef.current);
@@ -161,7 +172,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
     }
   };
 
-  // Auto-verify when all 6 digits entered
+  // Auto-verify when all 6 digits entered (signup)
   useEffect(() => {
     if (otp.replace(/\s/g, "").length === 6 && signupStep === "otp" && !loading) {
       handleVerifyOtp();
@@ -169,7 +180,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otp]);
 
-  // ── Resend OTP ─────────────────────────────────────────────────────────────
+  // ── Resend OTP (signup) ────────────────────────────────────────────────────
   const handleResend = async () => {
     if (otpTimer > 0) return;
     setLoading(true); setError(""); setInfo("");
@@ -191,7 +202,96 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
     }
   };
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // ── Forgot Password Handlers ──────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Step 1: send reset OTP
+  const handleFpSendOtp = async (e) => {
+    e.preventDefault();
+    if (!fpEmail) { setError("Please enter your email address."); return; }
+    setLoading(true); setError(""); setInfo("");
+    try {
+      const res  = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: fpEmail }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send reset code.");
+      setFpStep("otp");
+      setFpOtp("");
+      setInfo(`If an account exists for ${fpEmail}, a reset code has been sent.`);
+      startTimer(60);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Auto-advance when 6 reset-OTP digits entered
+  useEffect(() => {
+    if (fpOtp.replace(/\s/g, "").length === 6 && fpStep === "otp" && !loading) {
+      setFpStep("newpass");
+      setError(""); setInfo("");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fpOtp]);
+
+  // Step 2: resend reset OTP
+  const handleFpResend = async () => {
+    if (otpTimer > 0) return;
+    setLoading(true); setError(""); setInfo("");
+    try {
+      const res  = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: fpEmail }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to resend code.");
+      setFpOtp("");
+      setInfo("A new code has been sent.");
+      startTimer(60);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 3: set new password
+  const handleFpReset = async (e) => {
+    e.preventDefault();
+    if (fpPass.length < 6) { setError("Password must be at least 6 characters."); return; }
+    if (fpPass !== fpPassConfirm) { setError("Passwords do not match."); return; }
+    setLoading(true); setError("");
+    try {
+      const res  = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: fpEmail, otp: fpOtp, newPassword: fpPass }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Password reset failed.");
+      setFpStep("done");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Back to forgot password from OTP step
+  const goBackToFpEmail = () => {
+    setFpStep("email"); setFpOtp(""); setError(""); setInfo("");
+    clearInterval(timerRef.current); setOtpTimer(0);
+  };
+
   // ── Render ─────────────────────────────────────────────────────────────────
+  const isForgotPassword = activeTab === "forgot";
+
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       {/* Overlay */}
@@ -203,21 +303,23 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
       {/* Modal */}
       <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl z-10 animate-in zoom-in-95 duration-200 overflow-hidden border border-primary/10">
 
-        {/* Header Tabs */}
-        <div className="flex w-full border-b border-primary/10">
-          {["login", "signup"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => switchTab(tab)}
-              className={`flex-1 py-4 text-center font-outfit font-bold text-sm transition-colors capitalize
-                ${activeTab === tab
-                  ? "bg-primary-light/10 text-primary border-b-2 border-primary"
-                  : "text-foreground/50 hover:bg-primary-light/5"}`}
-            >
-              {tab === "login" ? "Login" : "Sign Up"}
-            </button>
-          ))}
-        </div>
+        {/* Header Tabs — hide when in forgot-password view */}
+        {!isForgotPassword && (
+          <div className="flex w-full border-b border-primary/10">
+            {["login", "signup"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => switchTab(tab)}
+                className={`flex-1 py-4 text-center font-outfit font-bold text-sm transition-colors capitalize
+                  ${activeTab === tab
+                    ? "bg-primary-light/10 text-primary border-b-2 border-primary"
+                    : "text-foreground/50 hover:bg-primary-light/5"}`}
+              >
+                {tab === "login" ? "Login" : "Sign Up"}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Close */}
         <button
@@ -243,6 +345,17 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
                 <IconInput icon={<Lock className="w-4 h-4" />} type="password" name="password" placeholder="Password"      value={formData.password} onChange={handleChange} minLength={6} />
                 <SubmitBtn loading={loading} label="Sign In" />
               </form>
+
+              {/* Forgot password link */}
+              <p className="text-center mt-4 text-xs text-foreground/50">
+                Forgot your password?{" "}
+                <button
+                  onClick={() => { setActiveTab("forgot"); setFpStep("email"); setError(""); setInfo(""); }}
+                  className="text-primary font-semibold hover:underline"
+                >
+                  Reset it
+                </button>
+              </p>
             </>
           )}
 
@@ -315,6 +428,172 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
                 </div>
               </div>
             </>
+          )}
+
+          {/* ────────────────────────────────────────────────────────────────── */}
+          {/* ── FORGOT PASSWORD ─────────────────────────────────────────────── */}
+          {/* ────────────────────────────────────────────────────────────────── */}
+
+          {/* Step 1 — enter email */}
+          {activeTab === "forgot" && fpStep === "email" && (
+            <>
+              <button
+                onClick={() => switchTab("login")}
+                className="flex items-center gap-1 text-xs text-foreground/40 hover:text-primary transition-colors mb-4"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
+              </button>
+
+              <div className="mb-6 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-3">
+                  <KeyRound className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="font-outfit font-extrabold text-2xl text-foreground">Forgot Password?</h3>
+                <p className="text-sm text-foreground/50 mt-1 leading-relaxed">
+                  Enter your registered email and we&apos;ll send you a reset code.
+                </p>
+              </div>
+
+              {error && <ErrorBanner msg={error} />}
+              {info  && !error && <InfoBanner msg={info} />}
+
+              <form onSubmit={handleFpSendOtp} className="flex flex-col gap-4">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/30">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="email"
+                    required
+                    placeholder="Email Address"
+                    value={fpEmail}
+                    onChange={(e) => { setFpEmail(e.target.value); setError(""); }}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
+                  />
+                </div>
+                <SubmitBtn loading={loading} label="Send Reset Code" icon={<ShieldCheck className="w-4 h-4" />} />
+              </form>
+            </>
+          )}
+
+          {/* Step 2 — verify OTP */}
+          {activeTab === "forgot" && fpStep === "otp" && (
+            <>
+              <button
+                onClick={goBackToFpEmail}
+                className="flex items-center gap-1 text-xs text-foreground/40 hover:text-primary transition-colors mb-4"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back
+              </button>
+
+              <div className="mb-6 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-3">
+                  <ShieldCheck className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="font-outfit font-extrabold text-2xl text-foreground">Check Your Email</h3>
+                <p className="text-sm text-foreground/50 mt-1 leading-relaxed">
+                  Enter the 6-digit code sent to<br />
+                  <span className="font-semibold text-foreground/70">{fpEmail}</span>
+                </p>
+              </div>
+
+              {error && <ErrorBanner msg={error} />}
+              {info  && !error && <InfoBanner msg={info} />}
+
+              <div className="flex flex-col gap-5">
+                <OtpInput value={fpOtp} onChange={setFpOtp} />
+
+                <p className="text-center text-xs text-foreground/40">
+                  Enter all 6 digits to continue automatically
+                </p>
+
+                {/* Resend */}
+                <div className="text-center text-xs text-foreground/50">
+                  Didn&apos;t receive it?{" "}
+                  {otpTimer > 0 ? (
+                    <span className="font-semibold text-foreground/40">Resend in {otpTimer}s</span>
+                  ) : (
+                    <button
+                      onClick={handleFpResend}
+                      disabled={loading}
+                      className="inline-flex items-center gap-1 text-primary font-semibold hover:underline disabled:opacity-50"
+                    >
+                      <RefreshCw className="w-3 h-3" /> Resend Code
+                    </button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Step 3 — new password */}
+          {activeTab === "forgot" && fpStep === "newpass" && (
+            <>
+              <div className="mb-6 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-3">
+                  <Lock className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="font-outfit font-extrabold text-2xl text-foreground">Set New Password</h3>
+                <p className="text-sm text-foreground/50 mt-1">
+                  Choose a strong password for your account.
+                </p>
+              </div>
+
+              {error && <ErrorBanner msg={error} />}
+
+              <form onSubmit={handleFpReset} className="flex flex-col gap-4">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/30">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="password"
+                    required
+                    minLength={6}
+                    placeholder="New Password (min 6 chars)"
+                    value={fpPass}
+                    onChange={(e) => { setFpPass(e.target.value); setError(""); }}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
+                  />
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/30">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="password"
+                    required
+                    minLength={6}
+                    placeholder="Confirm New Password"
+                    value={fpPassConfirm}
+                    onChange={(e) => { setFpPassConfirm(e.target.value); setError(""); }}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
+                  />
+                </div>
+                <SubmitBtn loading={loading} label="Reset Password" />
+              </form>
+            </>
+          )}
+
+          {/* Step 4 — success */}
+          {activeTab === "forgot" && fpStep === "done" && (
+            <div className="py-6 flex flex-col items-center text-center gap-4">
+              <div className="w-20 h-20 rounded-3xl bg-emerald-50 flex items-center justify-center">
+                <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+              </div>
+              <div>
+                <h3 className="font-outfit font-extrabold text-2xl text-foreground">Password Reset!</h3>
+                <p className="text-sm text-foreground/50 mt-2 leading-relaxed">
+                  Your password has been updated successfully.<br />You can now sign in with your new password.
+                </p>
+              </div>
+              <button
+                onClick={() => switchTab("login")}
+                className="mt-2 w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all text-sm"
+              >
+                Go to Login
+              </button>
+            </div>
           )}
 
         </div>
