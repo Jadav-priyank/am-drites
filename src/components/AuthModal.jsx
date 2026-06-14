@@ -75,8 +75,6 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
   const [error, setError]     = useState("");
   const [info, setInfo]       = useState("");
 
-  if (!isOpen) return null;
-
   // ── Timer helpers ──────────────────────────────────────────────────────────
   const startTimer = (secs = 60) => {
     setOtpTimer(secs);
@@ -238,6 +236,9 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fpOtp]);
+
+  // Early return after all hooks — safe here
+  if (!isOpen) return null;
 
   // Step 2: resend reset OTP
   const handleFpResend = async () => {
