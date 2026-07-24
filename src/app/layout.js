@@ -3,6 +3,11 @@ import "./globals.css";
 export const metadata = {
   title: "AM DRIETS | Nature's Goodness, Preserved",
   description: "Premium freeze-dried fruits and vegetable powders that preserve the natural taste, color, aroma, and nutritional value of fresh produce.",
+  icons: {
+    icon: "/logo.jpeg",
+    shortcut: "/logo.jpeg",
+    apple: "/logo.jpeg",
+  },
 };
 
 import ClientToaster from '../components/ClientToaster';
