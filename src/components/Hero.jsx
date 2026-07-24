@@ -66,7 +66,7 @@ export default function Hero({ scrollTo }) {
               onClick={() => scrollTo("products")}
               className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white text-sm font-extrabold px-8 py-4 rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 flex items-center justify-center gap-2 group transition-all duration-300"
             >
-              Shop Slices &amp; Powders
+              Shop Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
             </button>
             <button

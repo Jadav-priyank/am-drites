@@ -10,15 +10,21 @@ function generateOtp() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Build nodemailer transporter from env vars
 function createTransporter() {
+  const host = process.env.SMTP_HOST || '';
+  const isGmail = host.includes('gmail');
+
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_PORT === '465',
+    ...(isGmail
+      ? { service: 'gmail' }
+      : {
+        host,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_PORT === '465',
+      }),
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: process.env.SMTP_USER?.trim(),
+      pass: process.env.SMTP_PASS?.trim(),
     },
   });
 }
@@ -70,7 +76,7 @@ export async function POST(request) {
       ).join('<td style="width:6px;"></td>');
 
       await transporter.sendMail({
-        from: `"AM DRIETS" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        from: process.env.SMTP_FROM || `"AM DRIETS" <${process.env.SMTP_USER}>`,
         to: email,
         subject: 'Your AM DRIETS Verification Code',
         html: `

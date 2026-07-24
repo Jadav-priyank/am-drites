@@ -70,7 +70,7 @@ export default function Header({
         </div>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-foreground/80">
+        <nav className="hidden lg:flex items-center gap-8 text-base font-semibold text-foreground/80">
           <button onClick={() => scrollTo("products")} className="desktop-nav-link hover:text-primary transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all duration-300">Products</button>
           <button onClick={() => scrollTo("story")} className="desktop-nav-link hover:text-primary transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all duration-300">Our Story</button>
           <button onClick={() => scrollTo("quality")} className="desktop-nav-link hover:text-primary transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all duration-300">Our Promise</button>

@@ -19,7 +19,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid amount. Minimum amount must be 1 INR (100 paise)' }, { status: 400 });
     }
     
-    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder';
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder';
     const keySecret = process.env.RAZORPAY_KEY_SECRET || 'placeholder';
 
     const razorpay = new Razorpay({
