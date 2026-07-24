@@ -6,6 +6,8 @@ export const metadata = {
 };
 
 import ClientToaster from '../components/ClientToaster';
+import SmoothScroll from '../components/SmoothScroll';
+import CustomCursor from '../components/CustomCursor';
 
 export default function RootLayout({ children }) {
   return (
@@ -19,7 +21,10 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-full flex flex-col">
-        {children}
+        <CustomCursor />
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         <ClientToaster richColors position="bottom-center" toastOptions={{ className: "font-outfit" }} />
       </body>
     </html>
