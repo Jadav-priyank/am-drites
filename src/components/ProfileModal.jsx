@@ -224,24 +224,24 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
       />
 
       {/* Drawer Panel */}
-      <div className="relative w-full max-w-lg bg-white h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-300">
+      <div className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl bg-white h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-300">
         
         {/* Header */}
-        <div className="p-5 border-b border-primary/5 flex items-center justify-between bg-primary-light/10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white">
-              <User className="w-5 h-5" />
+        <div className="p-5 md:p-6 border-b border-primary/5 flex items-center justify-between bg-primary-light/10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-primary flex items-center justify-center text-white shrink-0">
+              <User className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h4 className="font-outfit font-black text-base text-foreground leading-tight">My Profile</h4>
-              <span className="text-[10px] text-foreground/40 font-bold uppercase tracking-wide">Manage account & addresses</span>
+              <h4 className="font-outfit font-black text-lg md:text-xl text-foreground leading-tight">My Profile</h4>
+              <span className="text-xs md:text-sm text-foreground/50 font-bold uppercase tracking-wide">Manage account & addresses</span>
             </div>
           </div>
           <button 
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-black/5 rounded-full text-foreground/50 hover:text-primary transition-all"
+            className="p-2 hover:bg-black/5 rounded-full text-foreground/50 hover:text-primary transition-all cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
@@ -249,7 +249,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
         <div className="flex w-full border-b border-primary/5 bg-slate-50 shrink-0">
           <button
             onClick={() => { setActiveTab("addresses"); setSelectedOrder(null); }}
-            className={`flex-1 py-3 text-center font-outfit font-black text-xs tracking-wide transition-all ${
+            className={`flex-1 py-3.5 text-center font-outfit font-black text-sm md:text-base tracking-wide transition-all ${
               activeTab === "addresses"
                 ? "bg-white text-primary border-b-2 border-primary"
                 : "text-foreground/40 hover:bg-white/50"
@@ -259,7 +259,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
           </button>
           <button
             onClick={() => { setActiveTab("orders"); setSelectedOrder(null); }}
-            className={`flex-1 py-3 text-center font-outfit font-black text-xs tracking-wide transition-all ${
+            className={`flex-1 py-3.5 text-center font-outfit font-black text-sm md:text-base tracking-wide transition-all ${
               activeTab === "orders"
                 ? "bg-white text-primary border-b-2 border-primary"
                 : "text-foreground/40 hover:bg-white/50"
@@ -270,42 +270,42 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-5 md:p-6 flex flex-col gap-6">
+        <div className="flex-1 overflow-y-auto p-5 md:p-7 flex flex-col gap-6">
           
           {activeTab === "addresses" && (
             <>
               {/* User Personal Details */}
-              <div className="bg-primary-light/20 border border-primary/5 p-4 rounded-2xl flex flex-col gap-2">
-                <span className="text-[9px] font-bold text-primary uppercase tracking-widest leading-none block mb-1">Account Info</span>
-                <div className="flex items-center justify-between text-xs font-bold">
+              <div className="bg-primary-light/20 border border-primary/5 p-4.5 md:p-5 rounded-2xl flex flex-col gap-2.5">
+                <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-widest leading-none block mb-1">Account Info</span>
+                <div className="flex items-center justify-between text-sm md:text-base font-bold">
                   <span className="text-foreground/50">Full Name</span>
                   <span className="text-foreground">{user?.name}</span>
                 </div>
-                <div className="flex items-center justify-between text-xs font-bold">
+                <div className="flex items-center justify-between text-sm md:text-base font-bold">
                   <span className="text-foreground/50">Email Address</span>
-                  <span className="text-foreground truncate max-w-[200px]">{user?.email}</span>
+                  <span className="text-foreground truncate max-w-[240px] md:max-w-[340px]">{user?.email}</span>
                 </div>
               </div>
 
               {/* Form to Add / Edit Address */}
               {showForm ? (
-                <div className="border border-primary/10 rounded-2xl p-4 bg-primary-light/5 flex flex-col gap-4 animate-in slide-in-from-top-3">
-                  <div className="flex justify-between items-center border-b border-primary/5 pb-2">
-                    <span className="text-xs font-bold text-foreground">
+                <div className="border border-primary/10 rounded-2xl p-5 md:p-6 bg-primary-light/5 flex flex-col gap-4.5 animate-in slide-in-from-top-3">
+                  <div className="flex justify-between items-center border-b border-primary/5 pb-2.5">
+                    <span className="text-sm md:text-base font-bold text-foreground">
                       {isEditing ? "Edit Saved Address" : "Add New Delivery Address"}
                     </span>
                     <button 
                       onClick={() => setShowForm(false)}
-                      className="text-foreground/40 hover:text-red-500 text-xs font-semibold"
+                      className="text-foreground/40 hover:text-red-500 text-xs md:text-sm font-semibold cursor-pointer"
                     >
                       Cancel
                     </button>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-3.5">
+                  <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
                     {/* Recipient Name */}
-                    <div className="flex flex-col gap-1 col-span-2">
-                      <label className="text-[10px] font-bold text-foreground/60">Recipient Full Name *</label>
+                    <div className="flex flex-col gap-1.5 col-span-2">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">Recipient Full Name *</label>
                       <input 
                         type="text" 
                         name="name"
@@ -313,13 +313,13 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                         onChange={handleInputChange}
                         placeholder="e.g. Rahul Sharma"
                         required
-                        className="w-full px-3 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground"
+                        className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
                     </div>
 
                     {/* Phone */}
-                    <div className="flex flex-col gap-1 col-span-2">
-                      <label className="text-[10px] font-bold text-foreground/60">10-Digit Contact Number *</label>
+                    <div className="flex flex-col gap-1.5 col-span-2">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">10-Digit Contact Number *</label>
                       <input 
                         type="tel" 
                         name="phone"
@@ -328,13 +328,13 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                         placeholder="e.g. 9876543210"
                         maxLength={10}
                         required
-                        className="w-full px-3 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground"
+                        className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
                     </div>
 
                     {/* Address Line 1 */}
-                    <div className="flex flex-col gap-1 col-span-2">
-                      <label className="text-[10px] font-bold text-foreground/60">House/Flat No., Building, Street *</label>
+                    <div className="flex flex-col gap-1.5 col-span-2">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">House/Flat No., Building, Street *</label>
                       <input 
                         type="text" 
                         name="addressLine1"
@@ -342,26 +342,26 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                         onChange={handleInputChange}
                         placeholder="e.g. Flat 302, Green Meadows"
                         required
-                        className="w-full px-3 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground"
+                        className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
                     </div>
 
                     {/* Address Line 2 */}
-                    <div className="flex flex-col gap-1 col-span-2">
-                      <label className="text-[10px] font-bold text-foreground/60">Area, Locality, Landmark (Optional)</label>
+                    <div className="flex flex-col gap-1.5 col-span-2">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">Area, Locality, Landmark (Optional)</label>
                       <input 
                         type="text" 
                         name="addressLine2"
                         value={formData.addressLine2}
                         onChange={handleInputChange}
                         placeholder="e.g. Near St. Mary Church"
-                        className="w-full px-3 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground"
+                        className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
                     </div>
 
                     {/* City */}
-                    <div className="flex flex-col gap-1">
-                      <label className="text-[10px] font-bold text-foreground/60">City *</label>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">City *</label>
                       <input 
                         type="text" 
                         name="city"
@@ -369,19 +369,19 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                         onChange={handleInputChange}
                         placeholder="e.g. Pune"
                         required
-                        className="w-full px-3 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground"
+                        className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
                     </div>
 
                     {/* State */}
-                    <div className="flex flex-col gap-1">
-                      <label className="text-[10px] font-bold text-foreground/60">State *</label>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">State *</label>
                       <select 
                         name="state"
                         value={formData.state}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-2.5 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground cursor-pointer"
+                        className="w-full px-3 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground cursor-pointer"
                       >
                         <option value="">Select State</option>
                         {INDIAN_STATES.map(st => (
@@ -391,8 +391,8 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                     </div>
 
                     {/* PIN Code */}
-                    <div className="flex flex-col gap-1">
-                      <label className="text-[10px] font-bold text-foreground/60">PIN Code *</label>
+                    <div className="flex flex-col gap-1.5 col-span-2 md:col-span-1">
+                      <label className="text-xs md:text-sm font-bold text-foreground/70">PIN Code *</label>
                       <input 
                         type="text" 
                         name="pinCode"
@@ -401,21 +401,21 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                         placeholder="e.g. 411001"
                         maxLength={6}
                         required
-                        className="w-full px-3 py-2 rounded-lg bg-white border border-primary/10 focus:border-primary focus:outline-none text-xs font-semibold text-foreground"
+                        className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
                     </div>
 
                     {/* Default Toggle Checkbox */}
-                    <div className="flex items-center gap-2 col-span-2 mt-2">
+                    <div className="flex items-center gap-2.5 col-span-2 mt-2">
                       <input 
                         type="checkbox" 
                         id="isDefault"
                         name="isDefault"
                         checked={formData.isDefault}
                         onChange={handleInputChange}
-                        className="w-4 h-4 rounded text-primary border-primary/20 focus:ring-primary cursor-pointer accent-primary"
+                        className="w-4.5 h-4.5 rounded text-primary border-primary/20 focus:ring-primary cursor-pointer accent-primary"
                       />
-                      <label htmlFor="isDefault" className="text-xs font-bold text-foreground/60 cursor-pointer select-none">
+                      <label htmlFor="isDefault" className="text-xs md:text-sm font-bold text-foreground/70 cursor-pointer select-none">
                         Set as my default delivery address
                       </label>
                     </div>
@@ -424,10 +424,10 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                     <button 
                       type="submit"
                       disabled={loading}
-                      className="col-span-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-70 mt-2 cursor-pointer"
+                      className="col-span-2 bg-primary hover:bg-primary-hover text-white text-sm md:text-base font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-70 mt-2 cursor-pointer"
                     >
                       {loading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-5 h-5 animate-spin" />
                       ) : (
                         <span>Save Address</span>
                       )}
@@ -438,12 +438,12 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                 /* Addresses List */
                 <div className="flex flex-col gap-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-wider">Saved Addresses</span>
+                    <span className="text-xs md:text-sm font-bold text-foreground/50 uppercase tracking-wider">Saved Addresses</span>
                     <button 
                       onClick={handleOpenAdd}
-                      className="text-xs font-bold text-primary flex items-center gap-1 hover:underline"
+                      className="text-xs md:text-sm font-bold text-primary flex items-center gap-1.5 hover:underline cursor-pointer"
                     >
-                      <Plus className="w-3.5 h-3.5" />
+                      <Plus className="w-4 h-4" />
                       Add Address
                     </button>
                   </div>
@@ -453,42 +453,42 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                       user.addresses.map((addr) => (
                         <div 
                           key={addr._id} 
-                          className={`border p-4 rounded-2xl flex flex-col gap-3 transition-all relative ${addr.isDefault ? "border-primary bg-primary-light/5 shadow-xs" : "border-primary/5 bg-white hover:border-primary/25"}`}
+                          className={`border p-4.5 md:p-5 rounded-2xl flex flex-col gap-3.5 transition-all relative ${addr.isDefault ? "border-primary bg-primary-light/5 shadow-xs" : "border-primary/5 bg-white hover:border-primary/25"}`}
                         >
                           <div className="flex justify-between items-start">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-outfit font-black text-sm text-foreground">{addr.name}</span>
+                                <span className="font-outfit font-black text-base md:text-lg text-foreground">{addr.name}</span>
                                 {addr.isDefault && (
-                                  <span className="text-[9px] font-bold bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wider select-none">
+                                  <span className="text-[10px] md:text-xs font-bold bg-primary text-white px-2.5 py-0.5 rounded-full uppercase tracking-wider select-none">
                                     Default
                                   </span>
                                 )}
                               </div>
-                              <span className="text-[10px] text-foreground/40 font-bold block mt-0.5">Phone: {addr.phone}</span>
+                              <span className="text-xs md:text-sm text-foreground/50 font-bold block mt-1">Phone: {addr.phone}</span>
                             </div>
 
                             {/* Actions Row */}
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-2">
                               <button 
                                 onClick={() => handleOpenEdit(addr)}
-                                className="p-1.5 hover:bg-primary-light rounded-lg text-foreground/30 hover:text-primary transition-colors"
+                                className="p-2 hover:bg-primary-light rounded-lg text-foreground/40 hover:text-primary transition-colors cursor-pointer"
                                 title="Edit Address"
                               >
-                                <Edit3 className="w-3.5 h-3.5" />
+                                <Edit3 className="w-4 h-4" />
                               </button>
                               <button 
                                 onClick={() => handleDelete(addr._id)}
-                                className="p-1.5 hover:bg-red-50 rounded-lg text-foreground/30 hover:text-red-500 transition-colors"
+                                className="p-2 hover:bg-red-50 rounded-lg text-foreground/40 hover:text-red-500 transition-colors cursor-pointer"
                                 title="Delete Address"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
 
                           {/* Address detail strings */}
-                          <p className="text-xs text-foreground/70 leading-relaxed font-semibold">
+                          <p className="text-sm md:text-base text-foreground/80 leading-relaxed font-semibold">
                             {addr.addressLine1}
                             {addr.addressLine2 && `, ${addr.addressLine2}`}
                             <br />
@@ -499,9 +499,9 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                           {!addr.isDefault && (
                             <button 
                               onClick={() => handleSetDefault(addr)}
-                              className="text-[10px] font-bold text-foreground/40 hover:text-primary mt-1 text-left flex items-center gap-1 transition-all"
+                              className="text-xs md:text-sm font-bold text-foreground/40 hover:text-primary mt-1 text-left flex items-center gap-1.5 transition-all cursor-pointer"
                             >
-                              <CheckCircle2 className="w-3.5 h-3.5 text-foreground/20 hover:text-primary" />
+                              <CheckCircle2 className="w-4 h-4 text-foreground/20 hover:text-primary" />
                               <span>Set as default</span>
                             </button>
                           )}
@@ -509,12 +509,12 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                       ))
                     ) : (
                       <div className="text-center py-12 border border-dashed border-primary/10 rounded-2xl bg-slate-50/50">
-                        <MapPin className="w-8 h-8 text-foreground/20 mx-auto mb-2" />
-                        <p className="text-xs font-bold text-foreground/50">No saved addresses yet</p>
-                        <p className="text-[11px] text-foreground/30 mt-1 max-w-[200px] mx-auto leading-relaxed">Save delivery details here to enjoy instant checkouts on your future organic fruit snacks.</p>
+                        <MapPin className="w-10 h-10 text-foreground/20 mx-auto mb-2" />
+                        <p className="text-sm md:text-base font-bold text-foreground/60">No saved addresses yet</p>
+                        <p className="text-xs md:text-sm text-foreground/40 mt-1 max-w-[240px] mx-auto leading-relaxed">Save delivery details here to enjoy instant checkouts on your future organic fruit snacks.</p>
                         <button 
                           onClick={handleOpenAdd}
-                          className="mt-4 bg-primary text-white text-[10px] font-bold px-4 py-2.5 rounded-full shadow-md hover:bg-primary-hover transition-all cursor-pointer"
+                          className="mt-4 bg-primary text-white text-xs md:text-sm font-bold px-5 py-3 rounded-full shadow-md hover:bg-primary-hover transition-all cursor-pointer"
                         >
                           Add First Address
                         </button>
@@ -530,37 +530,37 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
             <div className="flex flex-col gap-5">
               {!selectedOrder ? (
                 <>
-                  <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-wider block">Your Past Orders</span>
+                  <span className="text-xs md:text-sm font-bold text-foreground/50 uppercase tracking-wider block">Your Past Orders</span>
                   {ordersLoading ? (
                     <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-3">
                       <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                      <span className="text-xs font-bold text-foreground/45 uppercase tracking-wide">Loading orders...</span>
+                      <span className="text-xs md:text-sm font-bold text-foreground/45 uppercase tracking-wide">Loading orders...</span>
                     </div>
                   ) : orders.length === 0 ? (
                     <div className="text-center py-12 border border-dashed border-primary/10 rounded-2xl bg-slate-50/50">
-                      <ShoppingBag className="w-8 h-8 text-foreground/20 mx-auto mb-2" />
-                      <p className="text-xs font-bold text-foreground/50">No orders yet</p>
-                      <p className="text-[11px] text-foreground/30 mt-1 max-w-[200px] mx-auto leading-relaxed">You haven&apos;t placed any orders yet. Visit our shop to get started!</p>
+                      <ShoppingBag className="w-10 h-10 text-foreground/20 mx-auto mb-2" />
+                      <p className="text-sm md:text-base font-bold text-foreground/60">No orders yet</p>
+                      <p className="text-xs md:text-sm text-foreground/40 mt-1 max-w-[240px] mx-auto leading-relaxed">You haven&apos;t placed any orders yet. Visit our shop to get started!</p>
                       <button 
                         onClick={() => { setIsOpen(false); }}
-                        className="mt-4 bg-primary text-white text-[10px] font-bold px-4 py-2.5 rounded-full shadow-md hover:bg-primary-hover transition-all cursor-pointer"
+                        className="mt-4 bg-primary text-white text-xs md:text-sm font-bold px-5 py-3 rounded-full shadow-md hover:bg-primary-hover transition-all cursor-pointer"
                       >
                         Explore Snacks
                       </button>
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-3.5">
+                    <div className="flex flex-col gap-4">
                       {orders.map((order) => (
                         <div
                           key={order._id}
                           onClick={() => setSelectedOrder(order)}
-                          className="border border-primary/5 hover:border-primary/25 p-4 rounded-2xl bg-white hover:bg-primary-light/5 cursor-pointer transition-all flex flex-col gap-2.5 relative shadow-xs"
+                          className="border border-primary/5 hover:border-primary/25 p-4.5 md:p-5 rounded-2xl bg-white hover:bg-primary-light/5 cursor-pointer transition-all flex flex-col gap-3 relative shadow-xs"
                         >
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="font-mono text-foreground/40 font-bold">
+                          <div className="flex justify-between items-center text-sm md:text-base">
+                            <span className="font-mono text-foreground/50 font-bold">
                               #AMD-{order._id.substring(order._id.length - 8).toUpperCase()}
                             </span>
-                            <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide border ${
+                            <span className={`px-3 py-1 rounded-full text-xs md:text-sm font-extrabold uppercase tracking-wide border ${
                               order.status === "Delivered" || order.status === "Completed" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
                               order.status === "Pending" ? "bg-amber-50 text-amber-600 border-amber-100" :
                               order.status === "Processing" ? "bg-blue-50 text-blue-600 border-blue-100" :
@@ -574,8 +574,8 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                           
                           <div className="flex justify-between items-end">
                             <div>
-                              <span className="text-[9px] text-foreground/30 font-bold block">Ordered On</span>
-                              <span className="text-xs font-semibold text-foreground/75">
+                              <span className="text-xs text-foreground/40 font-bold block">Ordered On</span>
+                              <span className="text-sm md:text-base font-semibold text-foreground/80">
                                 {new Date(order.createdAt).toLocaleDateString("en-IN", {
                                   day: "numeric",
                                   month: "short",
@@ -584,13 +584,13 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                               </span>
                             </div>
                             <div className="text-right">
-                              <span className="text-[9px] text-foreground/30 font-bold block">Grand Total</span>
-                              <span className="text-sm font-black text-foreground">₹{order.totalAmount}</span>
+                              <span className="text-xs text-foreground/40 font-bold block">Grand Total</span>
+                              <span className="text-base md:text-lg font-black text-foreground">₹{order.totalAmount}</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5 text-[9px] font-bold text-primary hover:underline self-end mt-1">
+                          <div className="flex items-center gap-1.5 text-xs md:text-sm font-bold text-primary hover:underline self-end mt-1">
                             <span>Inspect & Track Order</span>
-                            <ChevronRight className="w-3 h-3" />
+                            <ChevronRight className="w-4 h-4" />
                           </div>
                         </div>
                       ))}
@@ -602,21 +602,21 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                 <div className="flex flex-col gap-5.5 animate-in slide-in-from-right duration-200">
                   <button
                     onClick={() => setSelectedOrder(null)}
-                    className="flex items-center gap-1.5 text-xs font-bold text-foreground/45 hover:text-primary transition-colors self-start"
+                    className="flex items-center gap-2 text-xs md:text-sm font-bold text-foreground/50 hover:text-primary transition-colors self-start cursor-pointer"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <ArrowLeft className="w-4 h-4" />
                     <span>Back to Order History</span>
                   </button>
 
                   <div className="border-b border-primary/5 pb-3">
-                    <h5 className="font-outfit font-black text-base text-foreground leading-tight">
+                    <h5 className="font-outfit font-black text-lg md:text-xl text-foreground leading-tight">
                       Order Details
                     </h5>
-                    <div className="flex justify-between items-center mt-1.5">
-                      <span className="text-[10px] text-foreground/45 font-bold font-mono">
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-xs md:text-sm text-foreground/50 font-bold font-mono">
                         #AMD-{selectedOrder._id.substring(selectedOrder._id.length - 8).toUpperCase()}
                       </span>
-                      <span className="text-[10px] text-foreground/45 font-bold">
+                      <span className="text-xs md:text-sm text-foreground/50 font-bold">
                         Placed on: {new Date(selectedOrder.createdAt).toLocaleDateString("en-IN", {
                           day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
                         })}
@@ -625,11 +625,11 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                   </div>
 
                   {/* VISUAL SHIPMENT TRACKING STEP TIMELINE */}
-                  <div className="bg-primary-light/10 border border-primary/5 p-4 rounded-2xl">
-                    <span className="text-[9px] font-bold text-primary uppercase tracking-widest leading-none block mb-3.5">Delivery Progress</span>
+                  <div className="bg-primary-light/10 border border-primary/5 p-4.5 md:p-5 rounded-2xl">
+                    <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-widest leading-none block mb-4">Delivery Progress</span>
                     
                     {selectedOrder.status === "Cancelled" ? (
-                      <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-500 text-xs font-bold text-center">
+                      <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-xl text-rose-500 text-xs md:text-sm font-bold text-center">
                         ⚠️ Order was Cancelled
                       </div>
                     ) : (
@@ -662,14 +662,14 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
 
                           return (
                             <div key={step} className="flex flex-col items-center z-10 relative">
-                              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border transition-all ${
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border transition-all ${
                                 isCompleted 
                                   ? "bg-primary border-primary text-white shadow shadow-primary/20" 
                                   : "bg-white border-slate-200 text-slate-400"
                               }`}>
-                                {isCompleted ? <Check className="w-3.5 h-3.5" /> : idx + 1}
+                                {isCompleted ? <Check className="w-4 h-4" /> : idx + 1}
                               </div>
-                              <span className={`text-[9px] font-bold mt-1.5 ${isActive ? "text-primary font-black" : isCompleted ? "text-foreground/75" : "text-foreground/35"}`}>
+                              <span className={`text-xs font-bold mt-1.5 ${isActive ? "text-primary font-black" : isCompleted ? "text-foreground/75" : "text-foreground/35"}`}>
                                 {step}
                               </span>
                             </div>
@@ -682,10 +682,10 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                   {/* Shipment Tracking details */}
                   {selectedOrder.courierPartner && (
                     <div className="bg-slate-50 border border-primary/5 p-4.5 rounded-2xl flex items-start gap-3">
-                      <Truck className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
+                      <Truck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
-                        <span className="text-[9px] font-bold text-foreground/40 uppercase block leading-none">Shipment Tracking</span>
-                        <div className="text-xs font-bold text-foreground leading-tight mt-1">
+                        <span className="text-xs font-bold text-foreground/40 uppercase block leading-none">Shipment Tracking</span>
+                        <div className="text-sm font-bold text-foreground leading-tight mt-1">
                           {selectedOrder.courierPartner} - <span className="font-mono text-primary select-all">{selectedOrder.trackingNumber}</span>
                         </div>
                         {selectedOrder.trackingUrl && (
@@ -693,7 +693,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                             href={selectedOrder.trackingUrl} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-[10px] font-bold text-primary hover:underline block mt-1.5"
+                            className="text-xs md:text-sm font-bold text-primary hover:underline block mt-1.5"
                           >
                             Track shipment online →
                           </a>
@@ -703,10 +703,10 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                   )}
 
                   {/* Delivery Location address preview */}
-                  <div className="flex flex-col gap-1.5 text-xs">
-                    <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wide">Delivered To</span>
-                    <div className="font-bold text-foreground">{selectedOrder.shippingAddress?.name}</div>
-                    <p className="text-foreground/60 leading-relaxed font-semibold">
+                  <div className="flex flex-col gap-1.5 text-xs md:text-sm">
+                    <span className="text-xs font-bold text-foreground/50 uppercase tracking-wide">Delivered To</span>
+                    <div className="font-bold text-foreground text-sm md:text-base">{selectedOrder.shippingAddress?.name}</div>
+                    <p className="text-foreground/70 leading-relaxed font-semibold text-xs md:text-sm">
                       {selectedOrder.shippingAddress?.addressLine1}
                       {selectedOrder.shippingAddress?.addressLine2 && `, ${selectedOrder.shippingAddress.addressLine2}`}
                       <br />
@@ -716,41 +716,41 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
 
                   {/* Items Summary list */}
                   <div className="flex flex-col gap-2.5">
-                    <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wide">Snack Items</span>
-                    <div className="flex flex-col gap-2">
+                    <span className="text-xs font-bold text-foreground/50 uppercase tracking-wide">Snack Items</span>
+                    <div className="flex flex-col gap-2.5">
                       {selectedOrder.items?.map((item) => (
-                        <div key={item._id || item.id} className="flex justify-between items-center text-xs bg-slate-50/50 p-2.5 rounded-xl border border-primary/5">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6.5 h-6.5 rounded-lg bg-primary-light flex items-center justify-center text-primary font-outfit font-black text-[9px] shrink-0">
+                        <div key={item._id || item.id} className="flex justify-between items-center text-xs md:text-sm bg-slate-50/50 p-3 rounded-xl border border-primary/5">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center text-primary font-outfit font-black text-xs shrink-0">
                               {item.size}
                             </div>
                             <div className="flex flex-col">
-                              <span className="font-bold text-foreground leading-none">{item.name}</span>
-                              <span className="text-[9px] text-foreground/40 mt-0.5">₹{item.price} each</span>
+                              <span className="font-bold text-foreground text-sm leading-none">{item.name}</span>
+                              <span className="text-xs text-foreground/40 mt-0.5">₹{item.price} each</span>
                             </div>
                           </div>
-                          <span className="font-bold text-foreground/60">Qty: {item.quantity}</span>
+                          <span className="font-bold text-foreground/70 text-sm">Qty: {item.quantity}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Calculation / Invoice button */}
-                  <div className="border-t border-primary/5 pt-3.5 flex flex-col gap-2.5 mt-auto">
-                    <div className="flex justify-between items-center text-xs font-bold">
-                      <span className="text-foreground/40">Status</span>
+                  <div className="border-t border-primary/5 pt-4 flex flex-col gap-3 mt-auto">
+                    <div className="flex justify-between items-center text-xs md:text-sm font-bold">
+                      <span className="text-foreground/50">Status</span>
                       <span className="text-foreground uppercase">{selectedOrder.paymentStatus} ({selectedOrder.paymentMethod})</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm font-bold border-b border-primary/5 pb-3.5">
-                      <span className="text-foreground/40">Amount Paid</span>
-                      <span className="text-sm font-black text-primary">₹{selectedOrder.totalAmount}</span>
+                    <div className="flex justify-between items-center text-base md:text-lg font-bold border-b border-primary/5 pb-4">
+                      <span className="text-foreground/50">Amount Paid</span>
+                      <span className="text-base md:text-lg font-black text-primary">₹{selectedOrder.totalAmount}</span>
                     </div>
 
                     <button
                       onClick={() => window.open(`/orders/invoice/${selectedOrder._id}`, "_blank")}
-                      className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all mt-1"
+                      className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 md:py-4 rounded-xl text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all mt-1"
                     >
-                      <Printer className="w-4 h-4" />
+                      <Printer className="w-4 h-4 md:w-5 md:h-5" />
                       <span>Print Tax Invoice</span>
                     </button>
                   </div>
@@ -761,8 +761,8 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
         </div>
 
         {/* Footer text */}
-        <div className="p-4 border-t border-primary/5 bg-primary-light/5 text-center text-[10px] text-foreground/30 font-bold flex items-center justify-center gap-1">
-          <Info className="w-3 h-3" />
+        <div className="p-4 border-t border-primary/5 bg-primary-light/5 text-center text-xs md:text-sm text-foreground/40 font-bold flex items-center justify-center gap-1.5">
+          <Info className="w-4 h-4" />
           <span>Need help? Contact support at care@amdriets.com</span>
         </div>
 
