@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
 import {
   X, Mail, Lock, User, Loader2, ShieldCheck,
   RefreshCw, ArrowLeft, KeyRound, CheckCircle2,
@@ -114,10 +115,12 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
+      toast.success(`Welcome back, ${data.user?.name || "User"}! 👋`);
       onAuthSuccess(data.user);
       setIsOpen(false);
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -135,12 +138,14 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+      toast.info(`Verification code sent to ${formData.email}`);
       setSignupStep("otp");
       setInfo(`A 6-digit code was sent to ${formData.email}`);
       setOtp("");
       startTimer(60);
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -161,10 +166,12 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Verification failed");
+      toast.success("Account created successfully! Welcome to AM DRIETS 🎉");
       onAuthSuccess(data.user);
       setIsOpen(false);
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }

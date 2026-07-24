@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
         <SmoothScroll>
           {children}
         </SmoothScroll>
-        <ClientToaster richColors position="bottom-center" toastOptions={{ className: "font-outfit" }} />
+        <ClientToaster richColors position="top-right" toastOptions={{ className: "font-outfit mt-14" }} />
       </body>
     </html>
   );

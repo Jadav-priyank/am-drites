@@ -186,7 +186,7 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
       await afterAuthSuccess();
-      toast.success("Welcome back!");
+      toast.success(`Welcome back, ${data.user?.name || "User"}! 👋`);
     } catch (err) {
       setAuthError(err.message); toast.error(err.message);
     } finally { setAuthLoading(false); }
@@ -204,12 +204,14 @@ export default function CheckoutPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+      toast.info(`Verification code sent to ${authFormData.email}`);
       setCheckoutSignupStep("otp");
       setCheckoutOtp("");
       setAuthInfo(`Verification code sent to ${authFormData.email}`);
       startOtpTimer(60);
     } catch (err) {
       setAuthError(err.message);
+      toast.error(err.message);
     } finally { setAuthLoading(false); }
   };
 
@@ -227,9 +229,10 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Verification failed");
       await afterAuthSuccess();
-      toast.success("Account created successfully!");
+      toast.success("Account created successfully! Welcome to AM DRIETS 🎉");
     } catch (err) {
       setAuthError(err.message);
+      toast.error(err.message);
     } finally { setAuthLoading(false); }
   };
 
