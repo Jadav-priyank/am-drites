@@ -360,8 +360,44 @@ export default function CheckoutPage() {
     toast.info("Coupon removed.");
   };
 
-  // Math variables
-  const shippingFee = cartTotal >= 499 ? 0 : 50;
+  // Dynamic Shipping Rules State
+  const [shippingRules, setShippingRules] = useState({
+    freeShippingThreshold: 499,
+    percentageCharge: 10,
+    minShippingCharge: 50,
+    isEnabled: true,
+  });
+
+  const fetchShippingRules = async () => {
+    try {
+      const res = await fetch("/api/shipping-settings");
+      const data = await res.json();
+      if (data.success && data.settings) {
+        setShippingRules({
+          freeShippingThreshold: data.settings.freeShippingThreshold ?? 499,
+          percentageCharge: data.settings.percentageCharge ?? 10,
+          minShippingCharge: data.settings.minShippingCharge ?? 50,
+          isEnabled: data.settings.isEnabled ?? true,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch dynamic shipping rules:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchShippingRules();
+  }, []);
+
+  // Math variables with dynamic shipping rules
+  const calculateDynamicShipping = () => {
+    if (!shippingRules.isEnabled) return 0;
+    if (cartTotal >= shippingRules.freeShippingThreshold) return 0;
+    const percentAmount = (cartTotal * shippingRules.percentageCharge) / 100;
+    return Math.max(shippingRules.minShippingCharge, percentAmount);
+  };
+
+  const shippingFee = calculateDynamicShipping();
   const grandTotal = Math.max(0, cartTotal + shippingFee - discount);
 
   // Validate form details
@@ -1312,9 +1348,9 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            {cartTotal < 499 ? (
+            {cartTotal < shippingRules.freeShippingThreshold ? (
               <div className="bg-amber-50 text-amber-800 text-[10px] font-bold p-3 rounded-xl border border-amber-100/50 text-center animate-in fade-in duration-200">
-                Add <span className="text-primary">₹{499 - cartTotal}</span> more to qualify for <span className="text-primary">FREE Shipping</span>! (Free shipping above ₹499)
+                Add <span className="text-primary">₹{shippingRules.freeShippingThreshold - cartTotal}</span> more to qualify for <span className="text-primary">FREE Shipping</span>! (Free shipping above ₹{shippingRules.freeShippingThreshold})
               </div>
             ) : (
               <div className="bg-emerald-50 text-emerald-800 text-[10px] font-bold p-3 rounded-xl border border-emerald-100/50 text-center animate-in fade-in duration-200">

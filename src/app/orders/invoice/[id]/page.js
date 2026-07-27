@@ -63,8 +63,8 @@ export default function CustomerInvoicePage() {
 
   // Calculate fields
   const subtotal = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCharges = subtotal >= 499 ? 0 : 50;
   const totalDue = order.totalAmount;
+  const shippingCharges = Math.max(0, totalDue - subtotal);
   const couponDiscount = Math.max(0, subtotal + shippingCharges - totalDue);
 
   return (

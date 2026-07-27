@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { X, ShoppingBag, Plus, Minus, Trash2 } from "lucide-react";
@@ -19,6 +19,18 @@ export default function CartDrawer({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [shippingThreshold, setShippingThreshold] = useState(499);
+
+  useEffect(() => {
+    fetch("/api/shipping-settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.settings?.freeShippingThreshold !== undefined) {
+          setShippingThreshold(data.settings.freeShippingThreshold);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch shipping threshold in cart drawer:", err));
+  }, []);
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -129,9 +141,9 @@ export default function CartDrawer({
         {/* Drawer Checkout details */}
         {cart.length > 0 && (
           <div className="p-4 md:p-6 border-t border-primary/5 bg-primary-light/10">
-            {cartTotal < 499 ? (
+            {cartTotal < shippingThreshold ? (
               <div className="bg-amber-50 text-amber-800 text-[10px] md:text-[11px] font-bold p-3 rounded-xl border border-amber-100/50 mb-4 text-center">
-                Add <span className="text-primary">₹{499 - cartTotal}</span> more to get <span className="text-primary">FREE Shipping</span>! (Order above ₹499)
+                Add <span className="text-primary">₹{shippingThreshold - cartTotal}</span> more to get <span className="text-primary">FREE Shipping</span>! (Order above ₹{shippingThreshold})
               </div>
             ) : (
               <div className="bg-emerald-50 text-emerald-800 text-[10px] md:text-[11px] font-bold p-3 rounded-xl border border-emerald-100/50 mb-4 text-center">
@@ -144,7 +156,7 @@ export default function CartDrawer({
             </div>
             <div className="flex items-center justify-between text-sm text-foreground/50 mb-6">
               <span>Shipping</span>
-              <span>{cartTotal >= 499 ? "FREE" : "Calculated at checkout"}</span>
+              <span>{cartTotal >= shippingThreshold ? "FREE" : "Calculated at checkout"}</span>
             </div>
 
             <div className="flex flex-col gap-3">
