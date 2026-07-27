@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Search, User, ShoppingBag, Menu, X, Leaf } from "lucide-react";
 import gsap from "gsap";
@@ -26,6 +26,28 @@ export default function Header({
   const headerRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
+  // Lock background scrolling when mobile menu is open using position: fixed
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        const savedTop = document.body.style.top;
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        document.body.style.overflow = "";
+        if (savedTop) {
+          window.scrollTo(0, parseInt(savedTop, 10) * -1);
+        }
+      };
+    }
+  }, [mobileMenuOpen]);
+
   useGSAP(() => {
     // Initial desktop nav load animation
     gsap.fromTo(
@@ -47,7 +69,9 @@ export default function Header({
 
   const handleNavClick = (sectionId) => {
     setMobileMenuOpen(false);
-    scrollTo(sectionId);
+    setTimeout(() => {
+      scrollTo(sectionId);
+    }, 50);
   };
 
   return (
@@ -195,7 +219,11 @@ export default function Header({
 
       {/* Mobile Nav Menu */}
       {mobileMenuOpen && (
-        <div ref={mobileMenuRef} className="lg:hidden fixed inset-0 top-[76px] bg-background/95 backdrop-blur-md z-30 py-8 px-6 flex flex-col gap-6">
+        <div 
+          ref={mobileMenuRef} 
+          data-lenis-prevent
+          className="lg:hidden fixed inset-x-0 top-[72px] bottom-0 bg-background/98 backdrop-blur-md z-30 py-8 px-6 flex flex-col gap-6 overflow-y-auto overscroll-contain touch-pan-y shadow-2xl"
+        >
           <button onClick={() => handleNavClick("products")} className="mobile-link text-left text-lg font-bold hover:text-primary py-2 border-b border-primary/5">Products</button>
           <button onClick={() => handleNavClick("story")} className="mobile-link text-left text-lg font-bold hover:text-primary py-2 border-b border-primary/5">Our Story</button>
           <button onClick={() => handleNavClick("quality")} className="mobile-link text-left text-lg font-bold hover:text-primary py-2 border-b border-primary/5">Our Promise</button>
