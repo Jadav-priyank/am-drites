@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import {
   X, Mail, Lock, User, Loader2, ShieldCheck,
-  RefreshCw, ArrowLeft, KeyRound, CheckCircle2,
+  RefreshCw, ArrowLeft, KeyRound, CheckCircle2, Eye, EyeOff,
 } from "lucide-react";
 
 // ─── OTP Input ────────────────────────────────────────────────────────────────
@@ -550,34 +550,24 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
               {error && <ErrorBanner msg={error} />}
 
               <form onSubmit={handleFpReset} className="flex flex-col gap-4">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/30">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    placeholder="New Password (min 6 chars)"
-                    value={fpPass}
-                    onChange={(e) => { setFpPass(e.target.value); setError(""); }}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
-                  />
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/30">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    placeholder="Confirm New Password"
-                    value={fpPassConfirm}
-                    onChange={(e) => { setFpPassConfirm(e.target.value); setError(""); }}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
-                  />
-                </div>
+                <IconInput
+                  icon={<Lock className="w-4 h-4" />}
+                  type="password"
+                  name="fpPass"
+                  placeholder="New Password (min 6 chars)"
+                  value={fpPass}
+                  onChange={(e) => { setFpPass(e.target.value); setError(""); }}
+                  minLength={6}
+                />
+                <IconInput
+                  icon={<Lock className="w-4 h-4" />}
+                  type="password"
+                  name="fpPassConfirm"
+                  placeholder="Confirm New Password"
+                  value={fpPassConfirm}
+                  onChange={(e) => { setFpPassConfirm(e.target.value); setError(""); }}
+                  minLength={6}
+                />
                 <SubmitBtn loading={loading} label="Reset Password" />
               </form>
             </>
@@ -611,7 +601,11 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
 }
 
 // ── Shared sub-components ──────────────────────────────────────────────────────
-function IconInput({ icon, ...props }) {
+function IconInput({ icon, type, ...props }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === "password";
+  const inputType = isPassword ? (showPassword ? "text" : "password") : type;
+
   return (
     <div className="relative">
       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/30">
@@ -619,9 +613,21 @@ function IconInput({ icon, ...props }) {
       </div>
       <input
         {...props}
+        type={inputType}
         required
-        className="w-full pl-10 pr-4 py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all"
+        className={`w-full pl-10 ${isPassword ? "pr-10" : "pr-4"} py-3 rounded-xl bg-primary-light/5 border border-primary/10 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none text-base text-foreground transition-all`}
       />
+      {isPassword && (
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-foreground/40 hover:text-foreground/70 transition-colors focus:outline-none"
+          tabIndex={-1}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
+      )}
     </div>
   );
 }
