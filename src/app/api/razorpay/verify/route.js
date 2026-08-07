@@ -3,6 +3,8 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import connectToDatabase from '@/lib/mongodb';
 import Order from '@/models/Order';
+import User from '@/models/User';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 export async function POST(request) {
   try {
@@ -54,6 +56,14 @@ export async function POST(request) {
       razorpayPaymentId: razorpay_payment_id,
       shippingAddress
     });
+
+    // Send order confirmation receipt email
+    const user = await User.findById(decoded.userId);
+    const userEmail = user?.email || decoded.email;
+    const userName = user?.name || shippingAddress.name;
+    if (userEmail) {
+      sendOrderConfirmationEmail(order, userEmail, userName).catch(err => console.error("Confirmation email error:", err));
+    }
     
     return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error) {

@@ -237,13 +237,9 @@ export default function Footer({ scrollTo, setActiveCategory }) {
         </div>
 
         {/* Sub-footer copyright */}
-        <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between text-sm text-white/40 gap-4">
+        <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-center text-sm text-white/40 ">
           <p>© {new Date().getFullYear()} AM DRIETS. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">FSSAI License</a>
-          </div>
+         
         </div>
       </footer>
     </div>
