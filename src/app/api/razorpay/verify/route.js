@@ -50,6 +50,8 @@ export async function POST(request) {
       status: 'Processing',
       paymentMethod,
       paymentStatus: 'Paid',
+      razorpayOrderId: razorpay_order_id,
+      razorpayPaymentId: razorpay_payment_id,
       shippingAddress
     });
     

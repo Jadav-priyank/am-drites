@@ -277,6 +277,7 @@ export default function Home() {
 
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileModalTab, setProfileModalTab] = useState("addresses");
@@ -293,6 +294,8 @@ export default function Home() {
         }
       } catch (err) {
         console.error(err);
+      } finally {
+        setAuthLoading(false);
       }
     };
     
@@ -403,6 +406,7 @@ export default function Home() {
         setActiveCategory={setActiveCategory}
         isLoggedIn={isLoggedIn}
         user={user}
+        authLoading={authLoading}
         setAuthModalOpen={setAuthModalOpen}
         handleLogout={async () => {
           await fetch("/api/auth/logout", { method: "POST" });

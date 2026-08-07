@@ -1,20 +1,60 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useLenis } from "lenis/react";
 import Image from "next/image";
 import { X, Leaf } from "lucide-react";
 
 export default function QuickViewModal({ product, onClose, onAddToCart }) {
+  const lenis = useLenis();
+  const containerRef = useRef(null);
   const [showBack, setShowBack] = useState(false);
 
   useEffect(() => {
     setShowBack(false);
+    if (product) {
+      lenis?.stop();
+      document.documentElement.classList.add("lenis-stopped");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [product, lenis]);
+
+  useEffect(() => {
+    if (!product || !containerRef.current) return;
+    const handleScrollPrevent = (e) => {
+      const isInsideScrollable = e.target.closest('[data-lenis-prevent]');
+      if (!isInsideScrollable) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const node = containerRef.current;
+    node.addEventListener("wheel", handleScrollPrevent, { passive: false });
+    node.addEventListener("touchmove", handleScrollPrevent, { passive: false });
+
+    return () => {
+      node.removeEventListener("wheel", handleScrollPrevent);
+      node.removeEventListener("touchmove", handleScrollPrevent);
+    };
   }, [product]);
 
   if (!product) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div ref={containerRef} className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay */}
       <div 
         onClick={onClose}
@@ -22,7 +62,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }) {
       />
 
       {/* Modal Container */}
-      <div className="relative bg-white w-full max-w-3xl rounded-[32px] overflow-hidden shadow-2xl z-10 grid grid-cols-1 md:grid-cols-12 max-h-[90vh] overflow-y-auto animate-in scale-in duration-300">
+      <div data-lenis-prevent className="relative bg-white w-full max-w-3xl rounded-[32px] overflow-hidden shadow-2xl z-10 grid grid-cols-1 md:grid-cols-12 max-h-[90vh] overflow-y-auto animate-in scale-in duration-300">
         {/* Close Button */}
         <button 
           onClick={onClose}

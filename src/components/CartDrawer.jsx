@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useLenis } from "lenis/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { X, ShoppingBag, Plus, Minus, Trash2 } from "lucide-react";
@@ -17,6 +18,8 @@ export default function CartDrawer({
   isLoggedIn,
   setAuthModalOpen
 }) {
+  const lenis = useLenis();
+  const containerRef = useRef(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [shippingThreshold, setShippingThreshold] = useState(499);
@@ -32,6 +35,46 @@ export default function CartDrawer({
       .catch((err) => console.error("Failed to fetch shipping threshold in cart drawer:", err));
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      lenis?.stop();
+      document.documentElement.classList.add("lenis-stopped");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, lenis]);
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+    const handleScrollPrevent = (e) => {
+      const isInsideScrollable = e.target.closest('[data-lenis-prevent]');
+      if (!isInsideScrollable) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const node = containerRef.current;
+    node.addEventListener("wheel", handleScrollPrevent, { passive: false });
+    node.addEventListener("touchmove", handleScrollPrevent, { passive: false });
+
+    return () => {
+      node.removeEventListener("wheel", handleScrollPrevent);
+      node.removeEventListener("touchmove", handleScrollPrevent);
+    };
+  }, [isOpen]);
+
   const loadRazorpay = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -45,7 +88,7 @@ export default function CartDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div ref={containerRef} className="fixed inset-0 z-50 flex justify-end">
       {/* Overlay */}
       <div 
         onClick={() => setIsOpen(false)}
@@ -53,7 +96,7 @@ export default function CartDrawer({
       />
 
       {/* Drawer Panel */}
-      <div className="relative w-full max-w-md bg-white h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-350">
+      <div data-lenis-prevent className="relative w-full max-w-md bg-white h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-350">
         {/* Drawer Header */}
         <div className="p-4 md:p-6 border-b border-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -72,7 +115,7 @@ export default function CartDrawer({
         </div>
 
         {/* Drawer Items list */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-6">
+        <div data-lenis-prevent className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-6">
           {cart.map((item) => (
             <div key={item.id} className="flex gap-4 items-center justify-between bg-primary-light/10 p-3 rounded-2xl border border-primary/5">
               <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2 border border-primary/5 relative">

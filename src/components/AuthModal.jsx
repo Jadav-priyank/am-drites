@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useLenis } from "lenis/react";
 import { toast } from "sonner";
 import {
   X, Mail, Lock, User, Loader2, ShieldCheck,
@@ -55,7 +56,49 @@ function OtpInput({ value, onChange }) {
 
 // ─── Main Modal ───────────────────────────────────────────────────────────────
 export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
+  const lenis = useLenis();
+  const containerRef = useRef(null);
   const [activeTab, setActiveTab] = useState("login");
+
+  useEffect(() => {
+    if (isOpen) {
+      lenis?.stop();
+      document.documentElement.classList.add("lenis-stopped");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, lenis]);
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+    const handleScrollPrevent = (e) => {
+      const isInsideScrollable = e.target.closest('[data-lenis-prevent]');
+      if (!isInsideScrollable) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const node = containerRef.current;
+    node.addEventListener("wheel", handleScrollPrevent, { passive: false });
+    node.addEventListener("touchmove", handleScrollPrevent, { passive: false });
+
+    return () => {
+      node.removeEventListener("wheel", handleScrollPrevent);
+      node.removeEventListener("touchmove", handleScrollPrevent);
+    };
+  }, [isOpen]);
 
   // Signup steps: 'form' | 'otp'
   const [signupStep, setSignupStep] = useState("form");
@@ -301,7 +344,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
   const isForgotPassword = activeTab === "forgot";
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div ref={containerRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       {/* Overlay */}
       <div
         onClick={() => setIsOpen(false)}
@@ -309,7 +352,7 @@ export default function AuthModal({ isOpen, setIsOpen, onAuthSuccess }) {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl z-10 animate-in zoom-in-95 duration-200 overflow-hidden border border-primary/10">
+      <div data-lenis-prevent className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl z-10 animate-in zoom-in-95 duration-200 overflow-hidden border border-primary/10">
 
         {/* Header Tabs — hide when in forgot-password view */}
         {!isForgotPassword && (

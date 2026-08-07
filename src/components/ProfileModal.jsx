@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { X, Mail, Phone, MapPin, Plus, Trash2, Edit3, CheckCircle2, User, Loader2, Info, ShoppingBag, ChevronRight, ArrowLeft, Printer, Truck, FileText, Check } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useLenis } from "lenis/react";
+import { X, Mail, Phone, MapPin, Plus, Trash2, Edit3, CheckCircle2, User, Loader2, Info, ShoppingBag, ChevronRight, ArrowLeft, Printer, Truck, FileText, Check, AlertCircle, Ban } from "lucide-react";
 import { toast } from "sonner";
 
 const INDIAN_STATES = [
@@ -13,9 +14,9 @@ const INDIAN_STATES = [
   "Delhi", "Jammu and Kashmir", "Ladakh", "Puducherry"
 ];
 
-import { useEffect } from "react";
-
 export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, initialTab = "addresses" }) {
+  const lenis = useLenis();
+  const containerRef = useRef(null);
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editAddressId, setEditAddressId] = useState(null);
@@ -26,6 +27,8 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderToCancel, setOrderToCancel] = useState(null);
+  const [cancelling, setCancelling] = useState(false);
 
   // Address Form State
   const [formData, setFormData] = useState({
@@ -57,6 +60,73 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
       setOrdersLoading(false);
     }
   };
+
+  const handleCancelOrder = async (orderId) => {
+    setCancelling(true);
+    try {
+      const res = await fetch("/api/orders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId, action: "cancel" })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        toast.success("Order cancelled successfully");
+        setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: "Cancelled" } : o));
+        if (selectedOrder && selectedOrder._id === orderId) {
+          setSelectedOrder(prev => ({ ...prev, status: "Cancelled" }));
+        }
+        setOrderToCancel(null);
+      } else {
+        toast.error(data.error || "Failed to cancel order");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while cancelling order");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      lenis?.stop();
+      document.documentElement.classList.add("lenis-stopped");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      lenis?.start();
+      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, lenis]);
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+    const handleScrollPrevent = (e) => {
+      const isInsideScrollable = e.target.closest('[data-lenis-prevent]');
+      if (!isInsideScrollable) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const node = containerRef.current;
+    node.addEventListener("wheel", handleScrollPrevent, { passive: false });
+    node.addEventListener("touchmove", handleScrollPrevent, { passive: false });
+
+    return () => {
+      node.removeEventListener("wheel", handleScrollPrevent);
+      node.removeEventListener("touchmove", handleScrollPrevent);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen && activeTab === "orders") {
@@ -216,7 +286,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div ref={containerRef} className="fixed inset-0 z-50 flex justify-end">
       {/* Overlay */}
       <div 
         onClick={() => setIsOpen(false)}
@@ -224,7 +294,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
       />
 
       {/* Drawer Panel */}
-      <div className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl bg-white h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-300">
+      <div data-lenis-prevent className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl bg-white h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-300">
         
         {/* Header */}
         <div className="p-5 md:p-6 border-b border-primary/5 flex items-center justify-between bg-primary-light/10">
@@ -270,7 +340,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-5 md:p-7 flex flex-col gap-6">
+        <div data-lenis-prevent className="flex-1 overflow-y-auto p-5 md:p-7 flex flex-col gap-6">
           
           {activeTab === "addresses" && (
             <>
@@ -588,9 +658,23 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                               <span className="text-base md:text-lg font-black text-foreground">₹{order.totalAmount}</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5 text-xs md:text-sm font-bold text-primary hover:underline self-end mt-1">
-                            <span>Inspect & Track Order</span>
-                            <ChevronRight className="w-4 h-4" />
+                          <div className="flex items-center justify-between mt-1 pt-2 border-t border-slate-100">
+                            {(order.status === "Pending" || order.status === "Processing") ? (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOrderToCancel(order);
+                                }}
+                                className="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline flex items-center gap-1 cursor-pointer"
+                              >
+                                <Ban className="w-3.5 h-3.5" />
+                                <span>Cancel Order</span>
+                              </button>
+                            ) : <div />}
+                            <div className="flex items-center gap-1 text-xs md:text-sm font-bold text-primary hover:underline">
+                              <span>Inspect & Track Order</span>
+                              <ChevronRight className="w-4 h-4" />
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -753,12 +837,66 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                       <Printer className="w-4 h-4 md:w-5 md:h-5" />
                       <span>Print Tax Invoice</span>
                     </button>
+
+                    {(selectedOrder.status === "Pending" || selectedOrder.status === "Processing") && (
+                      <button
+                        onClick={() => setOrderToCancel(selectedOrder)}
+                        className="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold py-3 md:py-3.5 rounded-xl text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer border border-rose-200 transition-all"
+                      >
+                        <Ban className="w-4 h-4" />
+                        <span>Cancel Order</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
             </div>
           )}
         </div>
+
+        {/* Cancel Confirmation Modal Overlay */}
+        {orderToCancel && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-in fade-in">
+            <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col gap-4 border border-rose-100 animate-in zoom-in-95 duration-200">
+              <div className="flex items-center gap-3 text-rose-600">
+                <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-outfit font-black text-lg text-foreground leading-tight">Cancel Order?</h4>
+                  <span className="text-xs font-mono text-foreground/50">
+                    #AMD-{orderToCancel._id.substring(orderToCancel._id.length - 8).toUpperCase()}
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-sm font-semibold text-foreground/70 leading-relaxed">
+                Are you sure you want to cancel this order? This action cannot be undone and any processing will be stopped immediately.
+              </p>
+
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={() => setOrderToCancel(null)}
+                  disabled={cancelling}
+                  className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-foreground font-bold rounded-xl text-xs md:text-sm transition-all cursor-pointer"
+                >
+                  Keep Order
+                </button>
+                <button
+                  onClick={() => handleCancelOrder(orderToCancel._id)}
+                  disabled={cancelling}
+                  className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs md:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {cancelling ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <span>Confirm Cancel</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer text */}
         <div className="p-4 border-t border-primary/5 bg-primary-light/5 text-center text-xs md:text-sm text-foreground/40 font-bold flex items-center justify-center gap-1.5">

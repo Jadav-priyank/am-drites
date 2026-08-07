@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { Search, User, ShoppingBag, Menu, X, Leaf } from "lucide-react";
+import { Search, User, ShoppingBag, Menu, X, Leaf, Loader2 } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -17,6 +17,7 @@ export default function Header({
   setActiveCategory,
   isLoggedIn,
   user,
+  authLoading,
   setAuthModalOpen,
   handleLogout,
   setProfileModalOpen,
@@ -150,7 +151,11 @@ export default function Header({
           </div>
 
           {/* Account Icon */}
-          {isLoggedIn ? (
+          {authLoading ? (
+            <div className="hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-primary-light/50 border border-primary/20 animate-pulse">
+              <Loader2 className="w-4 h-4 text-primary animate-spin" />
+            </div>
+          ) : isLoggedIn ? (
             <div className="hidden lg:flex items-center gap-2 group relative">
               <button className="p-2.5 rounded-full bg-primary-light/50 text-primary transition-colors flex items-center justify-center font-bold text-xs w-10 h-10 uppercase border border-primary/20">
                 {user?.name?.charAt(0) || <User className="w-5 h-5" />}
@@ -231,7 +236,12 @@ export default function Header({
           <button onClick={() => handleNavClick("whyus")} className="mobile-link text-left text-lg font-bold hover:text-primary py-2 border-b border-primary/5">Why Us</button>
           
           {/* Auth in Mobile Menu */}
-          {isLoggedIn ? (
+          {authLoading ? (
+            <div className="mobile-link flex items-center gap-2 border-t border-primary/10 pt-4 mt-2 py-2">
+              <Loader2 className="w-4 h-4 text-primary animate-spin" />
+              <span className="text-sm font-bold text-foreground/40">Verifying session...</span>
+            </div>
+          ) : isLoggedIn ? (
             <div className="mobile-link flex flex-col gap-1 border-t border-primary/10 pt-4 mt-2 font-semibold">
               <span className="text-xs font-bold text-foreground/40 uppercase tracking-wider mb-2">My Account</span>
               <button

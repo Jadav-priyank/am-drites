@@ -44,8 +44,20 @@ const OrderSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['Pending', 'Paid'],
+    enum: ['Pending', 'Paid', 'Refund Pending', 'Refunded'],
     default: 'Pending',
+  },
+  razorpayOrderId: {
+    type: String,
+    default: "",
+  },
+  razorpayPaymentId: {
+    type: String,
+    default: "",
+  },
+  razorpayRefundId: {
+    type: String,
+    default: "",
   },
   shippingAddress: {
     name: { type: String, required: true },
@@ -62,4 +74,5 @@ const OrderSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.models.Order || mongoose.model('Order', OrderSchema);
+delete mongoose.models.Order;
+export default mongoose.model('Order', OrderSchema);
