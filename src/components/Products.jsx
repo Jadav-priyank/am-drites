@@ -129,9 +129,19 @@ export default function Products({
                   </span>
                   
                   {/* Floating badge */}
-                  <span className="bg-white text-primary text-[8px] sm:text-[10px] font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
-                    {product.tag}
-                  </span>
+                  {(product.stockQuantity !== undefined && product.stockQuantity <= 0) || product.inStock === false ? (
+                    <span className="bg-red-500 text-white text-[8px] sm:text-[10px] font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
+                      Out of Stock
+                    </span>
+                  ) : product.stockQuantity > 0 && product.stockQuantity <= 10 ? (
+                    <span className="bg-amber-500 text-white text-[8px] sm:text-[10px] font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm animate-pulse">
+                      Only {product.stockQuantity} Left!
+                    </span>
+                  ) : (
+                    <span className="bg-white text-primary text-[8px] sm:text-[10px] font-extrabold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
+                      {product.tag || 'Fresh Pack'}
+                    </span>
+                  )}
                 </div>
 
                 {/* representation utilizing our generated mockups */}
@@ -189,13 +199,23 @@ export default function Products({
 
               <div className="flex items-center gap-2">
                 {/* Add to Cart Button */}
-                <button 
-                  onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
-                  className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-black px-6 py-3 rounded-xl shadow-md shadow-primary/10 transition-colors"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Add to Cart
-                </button>
+                {(product.stockQuantity !== undefined && product.stockQuantity <= 0) || product.inStock === false ? (
+                  <button 
+                    disabled
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1.5 bg-slate-200 text-slate-400 text-xs font-bold px-5 py-3 rounded-xl cursor-not-allowed"
+                  >
+                    Out of Stock
+                  </button>
+                ) : (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+                    className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-black px-6 py-3 rounded-xl shadow-md shadow-primary/10 transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add to Cart
+                  </button>
+                )}
               </div>
             </div>
           </div>

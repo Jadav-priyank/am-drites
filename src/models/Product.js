@@ -54,10 +54,19 @@ const ProductSchema = new mongoose.Schema({
   bgGradient: String,
   imageFront: String,
   imageBack: String,
+  stockQuantity: {
+    type: Number,
+    default: 50
+  },
+  inStock: {
+    type: Boolean,
+    default: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-export default mongoose.models.Product || mongoose.model('Product', ProductSchema);
+delete mongoose.models.Product;
+export default mongoose.model('Product', ProductSchema);

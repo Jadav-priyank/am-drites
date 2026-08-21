@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import connectToDatabase from '@/lib/mongodb';
 import Order from '@/models/Order';
 import User from '@/models/User';
+import Product from '@/models/Product';
 import { sendOrderConfirmationEmail } from '@/lib/email';
 
 export async function POST(request) {
@@ -56,6 +57,16 @@ export async function POST(request) {
       razorpayPaymentId: razorpay_payment_id,
       shippingAddress
     });
+
+    // Decrement product inventory in database
+    for (const item of items) {
+      if (item.id || item._id) {
+        await Product.updateOne(
+          { $or: [{ id: item.id }, { _id: item._id }] },
+          { $inc: { stockQuantity: -(item.quantity || 1) } }
+        ).catch(err => console.error("Stock decrement error:", err));
+      }
+    }
 
     // Send order confirmation receipt email
     const user = await User.findById(decoded.userId);
