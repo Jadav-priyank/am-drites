@@ -73,6 +73,7 @@ export default function CheckoutPage() {
   const otpTimerRef = useState(null);
 
   // Order Details
+  const [codEnabled, setCodEnabled] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" | "ONLINE"
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -86,6 +87,22 @@ export default function CheckoutPage() {
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
   const [userHasOrders, setUserHasOrders] = useState(false);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch("/api/settings");
+      const data = await res.json();
+      if (data.success && data.settings) {
+        const isCodAvailable = data.settings.codEnabled ?? true;
+        setCodEnabled(isCodAvailable);
+        if (!isCodAvailable) {
+          setPaymentMethod("ONLINE");
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings:", err);
+    }
+  };
 
   const fetchAvailableCoupons = async () => {
     setCouponsLoading(true);
@@ -144,6 +161,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     checkSession();
+    fetchSettings();
 
     // Load Cart from LocalStorage
     const storedCart = localStorage.getItem("am_driets_cart");
@@ -1102,22 +1120,24 @@ export default function CheckoutPage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* COD Option */}
-                  <label 
-                    onClick={() => setPaymentMethod("COD")}
-                    className={`p-5 rounded-2xl border-2 flex flex-col gap-2 cursor-pointer transition-all ${paymentMethod === "COD" ? "border-primary bg-primary-light/20" : "border-primary/10 bg-white hover:border-primary/30"}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-outfit font-black text-sm text-foreground">Cash On Delivery (COD)</span>
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === "COD" ? "border-primary" : "border-foreground/20"}`}>
-                        {paymentMethod === "COD" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                <div className={`grid gap-4 ${codEnabled ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
+                  {/* COD Option (Rendered only when enabled in Admin Panel) */}
+                  {codEnabled && (
+                    <label 
+                      onClick={() => setPaymentMethod("COD")}
+                      className={`p-5 rounded-2xl border-2 flex flex-col gap-2 cursor-pointer transition-all ${paymentMethod === "COD" ? "border-primary bg-primary-light/20" : "border-primary/10 bg-white hover:border-primary/30"}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-outfit font-black text-sm text-foreground">Cash On Delivery (COD)</span>
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === "COD" ? "border-primary" : "border-foreground/20"}`}>
+                          {paymentMethod === "COD" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                        </div>
                       </div>
-                    </div>
-                    <span className="text-xs text-foreground/50 leading-relaxed">
-                      Pay via Cash or digital scanner when your packages arrive at your doorstep.
-                    </span>
-                  </label>
+                      <span className="text-xs text-foreground/50 leading-relaxed">
+                        Pay via Cash or digital scanner when your packages arrive at your doorstep.
+                      </span>
+                    </label>
+                  )}
 
                   {/* Razorpay Option */}
                   <label 

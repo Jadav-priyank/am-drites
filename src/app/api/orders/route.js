@@ -4,6 +4,7 @@ import connectToDatabase from '@/lib/mongodb';
 import Order from '@/models/Order';
 import User from '@/models/User';
 import Product from '@/models/Product';
+import Setting from '@/models/Setting';
 import { sendOrderCancellationEmail, sendOrderConfirmationEmail } from '@/lib/email';
 
 export async function GET(request) {
@@ -54,6 +55,13 @@ export async function POST(request) {
     }
     
     await connectToDatabase();
+    
+    if (paymentMethod === 'COD') {
+      const settings = await Setting.findOne();
+      if (settings && settings.codEnabled === false) {
+        return NextResponse.json({ error: 'Cash on Delivery (COD) is currently unavailable. Please choose online payment.' }, { status: 400 });
+      }
+    }
     
     const paymentStatus = paymentMethod === 'COD' ? 'Pending' : 'Paid';
     const status = paymentMethod === 'COD' ? 'Pending' : 'Processing';
