@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Features from "../components/Features";
@@ -412,6 +413,7 @@ export default function Home() {
           await fetch("/api/auth/logout", { method: "POST" });
           setUser(null);
           setIsLoggedIn(false);
+          toast.info("Logged out.");
         }}
         setProfileModalOpen={setProfileModalOpen}
         setProfileModalTab={setProfileModalTab}

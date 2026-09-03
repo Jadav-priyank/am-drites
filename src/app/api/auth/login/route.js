@@ -3,9 +3,13 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
+import { applyRateLimit } from '@/lib/rateLimit';
 
 export async function POST(request) {
   try {
+    const rateLimitResponse = applyRateLimit(request, { max: 10, windowMs: 15 * 60 * 1000, prefix: 'login' });
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { email, password } = await request.json();
 
     if (!email || !password) {

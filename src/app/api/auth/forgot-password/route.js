@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
 import PasswordResetOtp from '@/models/PasswordResetOtp';
+import { applyRateLimit } from '@/lib/rateLimit';
 
 function generateOtp() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -29,6 +30,9 @@ function createTransporter() {
 
 export async function POST(request) {
   try {
+    const rateLimitResponse = applyRateLimit(request, { max: 5, windowMs: 15 * 60 * 1000, prefix: 'forgot-password' });
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { email } = await request.json();
 
     if (!email) {

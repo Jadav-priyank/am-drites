@@ -3,11 +3,15 @@ import jwt from 'jsonwebtoken';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
 import Otp from '@/models/Otp';
+import { applyRateLimit } from '@/lib/rateLimit';
 
 const MAX_ATTEMPTS = 5;
 
 export async function POST(request) {
   try {
+    const rateLimitResponse = applyRateLimit(request, { max: 10, windowMs: 15 * 60 * 1000, prefix: 'verify-otp' });
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { email, otp } = await request.json();
 
     if (!email || !otp) {

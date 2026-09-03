@@ -3,11 +3,15 @@ import bcrypt from 'bcryptjs';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
 import PasswordResetOtp from '@/models/PasswordResetOtp';
+import { applyRateLimit } from '@/lib/rateLimit';
 
 const MAX_ATTEMPTS = 5;
 
 export async function POST(request) {
   try {
+    const rateLimitResponse = applyRateLimit(request, { max: 10, windowMs: 15 * 60 * 1000, prefix: 'reset-password' });
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { email, otp, newPassword } = await request.json();
 
     if (!email || !otp || !newPassword) {

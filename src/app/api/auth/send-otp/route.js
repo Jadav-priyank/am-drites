@@ -4,6 +4,7 @@ import nodemailer from 'nodemailer';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
 import Otp from '@/models/Otp';
+import { applyRateLimit } from '@/lib/rateLimit';
 
 // Generate a random 6-digit OTP
 function generateOtp() {
@@ -31,6 +32,9 @@ function createTransporter() {
 
 export async function POST(request) {
   try {
+    const rateLimitResponse = applyRateLimit(request, { max: 5, windowMs: 15 * 60 * 1000, prefix: 'send-otp' });
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { name, email, password } = await request.json();
 
     // Validate inputs
