@@ -865,10 +865,15 @@ export default function CheckoutPage() {
                 </div>
                 <button 
                   onClick={async () => {
-                    await fetch("/api/auth/logout", { method: "POST" });
-                    setUser(null);
-                    setIsLoggedIn(false);
-                    toast.info("Logged out.");
+                    try {
+                      await fetch("/api/auth/logout", { method: "POST" });
+                    } catch (err) {
+                      console.error("Logout error:", err);
+                    } finally {
+                      setUser(null);
+                      setIsLoggedIn(false);
+                      toast.success("Logged out successfully! 👋");
+                    }
                   }}
                   className="text-xs font-bold text-foreground/40 hover:text-red-500 transition-colors"
                 >
@@ -1444,8 +1449,9 @@ export default function CheckoutPage() {
       </main>
 
       {/* Footer copyright */}
-      <footer className="border-t border-primary/5 py-4 text-center text-xs text-foreground/30 font-semibold mt-12 bg-white/40">
-        <p>© {new Date().getFullYear()} AM DRIETS. All rights reserved.</p>
+      <footer className="border-t border-primary/5 py-4 px-6 text-center text-xs text-foreground/40 font-medium mt-12 bg-white/40 flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
+        <p>© {new Date().getFullYear()} AM DRIETS. All rights reserved. • Kamrej, Surat, Gujarat - 394185</p>
+        <p>GSTIN: 24FGCPR9808C1ZB | FASSAI Lic No. 20726022002709</p>
       </footer>
     </div>
   );

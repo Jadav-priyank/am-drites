@@ -113,14 +113,15 @@ export default function CustomerInvoicePage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100 pb-6">
           <div>
             <h1 className="font-outfit font-black text-3xl text-primary tracking-tight leading-none">AM DRIETS</h1>
-            <p className="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Premium Organic Fruit Snacks</p>
-            <div className="text-[10px] text-slate-500 font-semibold mt-1">
-              FSSAI Lic No: 11523998000542
+            <p className="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Nature&apos;s Goodness, Preserved</p>
+            <div className="text-[10px] text-slate-500 font-bold mt-2 flex flex-col gap-0.5">
+              <span>GSTIN: 24FGCPR9808C1ZB</span>
+              <span>FASSAI Lic No: 20726022002709</span>
             </div>
           </div>
           <div className="text-right md:text-right flex flex-col items-start md:items-end gap-1.5">
             <span className="bg-primary-light text-primary border border-primary/10 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-              Customer Bill Statement
+              Tax Invoice / Bill Statement
             </span>
             <div className="text-sm font-bold text-slate-800 font-mono mt-1">
               Invoice No: INV-AMD-{order._id.substring(order._id.length - 8).toUpperCase()}
@@ -140,13 +141,13 @@ export default function CustomerInvoicePage() {
           {/* Seller details */}
           <div className="flex flex-col gap-2">
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sold By</span>
-            <div className="font-bold text-sm text-slate-850">AM DRIETS Private Limited</div>
+            <div className="font-bold text-sm text-slate-850">AM DRIETS</div>
             <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-              123 Organic Lane, Industrial Area Phase II,
+              Kamrej, Surat, Gujarat, India - 394185
               <br />
-              Pune, Maharashtra - 411001, India
+              Email: info@amdriets.com
               <br />
-              Email: billing@amdriets.com | Support: care@amdriets.com
+              GSTIN: 24FGCPR9808C1ZB | FASSAI Lic No. 20726022002709
             </p>
           </div>
 

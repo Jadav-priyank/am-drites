@@ -14,7 +14,7 @@ const INDIAN_STATES = [
   "Delhi", "Jammu and Kashmir", "Ladakh", "Puducherry"
 ];
 
-export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, initialTab = "addresses" }) {
+export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, initialTab = "addresses", onLogout }) {
   const lenis = useLenis();
   const containerRef = useRef(null);
   const [showForm, setShowForm] = useState(false);
@@ -346,7 +346,20 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
             <>
               {/* User Personal Details */}
               <div className="bg-primary-light/20 border border-primary/5 p-4.5 md:p-5 rounded-2xl flex flex-col gap-2.5">
-                <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-widest leading-none block mb-1">Account Info</span>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-widest leading-none block">Account Info</span>
+                  {onLogout && (
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        onLogout();
+                      }}
+                      className="text-xs font-bold text-red-500 hover:text-red-600 hover:underline cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  )}
+                </div>
                 <div className="flex items-center justify-between text-sm md:text-base font-bold">
                   <span className="text-foreground/50">Full Name</span>
                   <span className="text-foreground">{user?.name}</span>
@@ -437,7 +450,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        placeholder="e.g. Pune"
+                        placeholder="e.g. Surat"
                         required
                         className="w-full px-3.5 py-2.5 md:py-3 rounded-xl bg-white border border-primary/10 focus:border-primary focus:outline-none text-sm md:text-base font-semibold text-foreground"
                       />
@@ -901,7 +914,7 @@ export default function ProfileModal({ isOpen, setIsOpen, user, onUpdateUser, in
         {/* Footer text */}
         <div className="p-4 border-t border-primary/5 bg-primary-light/5 text-center text-xs md:text-sm text-foreground/40 font-bold flex items-center justify-center gap-1.5">
           <Info className="w-4 h-4" />
-          <span>Need help? Contact support at care@amdriets.com</span>
+          <span>Need help? Contact support at info@amdriets.com</span>
         </div>
 
       </div>

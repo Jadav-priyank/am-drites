@@ -158,7 +158,7 @@ export default function Footer({ scrollTo, setActiveCategory }) {
           {/* Footer Links - Contact */}
           <div>
             <h5 className="font-outfit font-bold text-base text-white uppercase tracking-wider mb-6">Contact Us</h5>
-            <ul className="flex flex-col gap-4 text-sm text-white/60">
+            <ul className="flex flex-col gap-3.5 text-sm text-white/60">
               <li>
                 <a
                   href="mailto:info@amdriets.com"
@@ -170,30 +170,34 @@ export default function Footer({ scrollTo, setActiveCategory }) {
                   info@amdriets.com
                 </a>
               </li>
-              <li>
+              <li className="text-xs text-white/50 leading-relaxed">
+                <strong className="text-white/80 block">Location:</strong>
+                Kamrej, Surat, Gujarat, India - 394185
+              </li>
+              <li className="text-xs text-white/50 leading-relaxed">
+                <strong className="text-white/80">GSTIN:</strong> 24FGCPR9808C1ZB
+              </li>
+              <li className="text-xs text-white/50 leading-relaxed">
+                <strong className="text-white/80">FASSAI Lic No:</strong> 20726022002709
+              </li>
+              <li className="flex items-center gap-3 pt-1">
                 <a
                   href="https://www.instagram.com/amdriets"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 hover:text-primary transition-colors group"
+                  className="w-7 h-7 rounded-lg bg-white/5 hover:bg-pink-500/20 text-white/70 hover:text-pink-400 flex items-center justify-center transition-colors"
+                  aria-label="Instagram"
                 >
-                  <span className="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-pink-500/20 flex items-center justify-center shrink-0 transition-colors">
-                    <InstagramIcon className="w-3.5 h-3.5" />
-                  </span>
-                  @amdriets
+                  <InstagramIcon className="w-3.5 h-3.5" />
                 </a>
-              </li>
-              <li>
                 <a
                   href="https://www.facebook.com/share/1BTvLB7Lek/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 hover:text-primary transition-colors group"
+                  className="w-7 h-7 rounded-lg bg-white/5 hover:bg-blue-500/20 text-white/70 hover:text-blue-400 flex items-center justify-center transition-colors"
+                  aria-label="Facebook"
                 >
-                  <span className="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-blue-500/20 flex items-center justify-center shrink-0 transition-colors">
-                    <FacebookIcon className="w-3.5 h-3.5" />
-                  </span>
-                  AM DRIETS
+                  <FacebookIcon className="w-3.5 h-3.5" />
                 </a>
               </li>
             </ul>
@@ -237,9 +241,9 @@ export default function Footer({ scrollTo, setActiveCategory }) {
         </div>
 
         {/* Sub-footer copyright */}
-        <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-center text-sm text-white/40 ">
-          <p>© {new Date().getFullYear()} AM DRIETS. All rights reserved.</p>
-         
+        <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-white/40 gap-2">
+          <p>© {new Date().getFullYear()} AM DRIETS. All rights reserved. • Nature&apos;s Goodness, Preserved</p>
+          <p>GSTIN: 24FGCPR9808C1ZB | FASSAI Lic No. 20726022002709</p>
         </div>
       </footer>
     </div>

@@ -388,6 +388,18 @@ export default function Home() {
     });
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      setUser(null);
+      setIsLoggedIn(false);
+      toast.success("Logged out successfully! 👋");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans select-none antialiased">
       {/* ----------------- TOP PROMO BAR ----------------- */}
@@ -409,12 +421,7 @@ export default function Home() {
         user={user}
         authLoading={authLoading}
         setAuthModalOpen={setAuthModalOpen}
-        handleLogout={async () => {
-          await fetch("/api/auth/logout", { method: "POST" });
-          setUser(null);
-          setIsLoggedIn(false);
-          toast.info("Logged out.");
-        }}
+        handleLogout={handleLogout}
         setProfileModalOpen={setProfileModalOpen}
         setProfileModalTab={setProfileModalTab}
       />
@@ -476,6 +483,7 @@ export default function Home() {
         user={user}
         onUpdateUser={setUser}
         initialTab={profileModalTab}
+        onLogout={handleLogout}
       />
     </div>
   );
